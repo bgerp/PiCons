@@ -1,0 +1,33 @@
+﻿#!/bin/bash
+# Pi-Cons Setup procedures.
+
+usr=$(env | grep SUDO_USER | cut -d= -f 2)
+
+if [ -z $usr ] && [ $USER = "root" ]
+then
+    echo "The script needs to run as root" && exit 1
+fi
+
+apt-get -y update
+apt-get -y upgrade
+apt-get install tall build-essential python-dev python-smbus git
+cd /home/pi/Downloads/
+mkdir libs
+cd libs
+git clone https://github.com/adafruit/Adafruit_Python_MCP3008.git
+cd Adafruit_Python_MCP3008/
+python setup.py install
+pip install dicttoxml
+cd /home/pi
+chmod 0777 /home/pi/PiCons/
+cat /home/pi/PiCons/picons_autostart.sh >> .bashrc
+wget -qO - http://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add –
+echo "deb http://dl.bintray.com/kusti8/chromium-rpi jessie main" | sudo tee -a /etc/apt/sources.list
+apt-get -y update
+apt-get -y install chromium-browser
+cd /home/pi/.config/
+mkdir autostart
+cp /home/pi/PiCons/autoChromium.desktop /home/pi/.config/autostart/autoChromium.desktop
+echo "You should restart the system."
+echo "Type: sudo reboot"
+reboot
