@@ -2,7 +2,7 @@
 
 The idea of this application is to help WEB based application to talk with industrial hardwar.
 
-This application provides simply an HTP server that ggenerates XML responses.
+This application provides simply an HTTP server that ggenerates XML responses.
 The content of this responses is state of the digital inputs, digital outpust,
 pulsed outputs, analog inputs, electronic scales, etc.
 
@@ -32,3 +32,4 @@ boards, including:
 ## License
 
 This code is released under the MIT License.
+https://opensource.org/licenses/MIT
