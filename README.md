@@ -33,3 +33,39 @@ boards, including:
 
 This code is released under the MIT License.
 https://opensource.org/licenses/MIT
+
+## Setup the software.
+
+1. Go to home directory.
+
+        cd ~
+
+2. Download the software from the repository.
+
+        sudo git clone https://git@github.com/bgerp/PiCons.git
+
+3. Go to PiCons directory.
+
+        cd PiCons
+
+4. Setup the software.
+
+        sudo bash picons_setup.sh
+
+5. the device will autmaticly reboot affter instalation.
+
+## To make the tests of the device. 
+
+1. Login to the device.
+
+2. Go to home directory.
+
+        cd ~
+
+3. Go to PiCons directory.
+
+        cd PiCons
+
+4. Run the test.
+
+        sudo bash picons_test.sh
