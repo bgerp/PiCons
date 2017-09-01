@@ -80,7 +80,7 @@ class KioskSettings():
     '''
     [Desktop Entry]
     Type=Application
-    Exec=/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk http://polygonteam.com
+    Exec=/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk http://server2
     Hidden=false
     X-GNOME-Autostart-enabled=true
     Name[en_US]=AutoChromium
