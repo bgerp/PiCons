@@ -42,7 +42,7 @@ https://opensource.org/licenses/MIT
 
 2. Download the software from the repository.
 
-        sudo git clone https://git@github.com/bgerp/PiCons.git
+        sudo git clone https://github.com/bgerp/PiCons.git
 
 3. Go to PiCons directory.
 
