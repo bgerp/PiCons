@@ -10,7 +10,7 @@ fi
 
 apt-get -y update
 apt-get -y upgrade
-apt-get install tall build-essential python-dev python-smbus git
+apt-get install build-essential python-dev python-smbus git
 cd /home/pi/Downloads/
 mkdir libs
 cd libs
