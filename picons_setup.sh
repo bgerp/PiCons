@@ -10,7 +10,7 @@ fi
 
 apt-get -y update
 apt-get -y upgrade
-apt-get install build-essential python-dev python-smbus git
+apt-get install build-essential python-dev python-smbus git php-cli
 cd /home/pi/Downloads/
 mkdir libs
 cd libs
@@ -28,6 +28,9 @@ apt-get -y install chromium-browser
 cd /home/pi/.config/
 mkdir autostart
 cp /home/pi/PiCons/autoChromium.desktop /home/pi/.config/autostart/autoChromium.desktop
+echo "@reboot php -S localhost:8181 -t /home/pi/PiCons/StartPageWebroot" > cron.res
+crontab cron.res
+rm cron.res
 echo "You should restart the system."
 echo "Type: sudo reboot"
 reboot
