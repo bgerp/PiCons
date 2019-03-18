@@ -20,7 +20,6 @@ python setup.py install
 pip install dicttoxml
 cd /home/pi
 chmod 0777 /home/pi/PiCons/
-cat /home/pi/PiCons/picons_autostart.sh >> .bashrc
 wget -qO - http://bintray.com/user/downloadSubjectPublicKey?username=bintray | sudo apt-key add –
 echo "deb http://dl.bintray.com/kusti8/chromium-rpi jessie main" | sudo tee -a /etc/apt/sources.list
 apt-get -y update
@@ -29,6 +28,7 @@ cd /home/pi/.config/
 mkdir autostart
 cp /home/pi/PiCons/autoChromium.desktop /home/pi/.config/autostart/autoChromium.desktop
 echo "@reboot php -S localhost:8181 -t /home/pi/PiCons/StartPageWebroot" > cron.res
+echo "@reboot bash /home/pi/PiCons/picons_autostart.sh" >> cron.res
 crontab cron.res
 rm cron.res
 echo "You should restart the system."
