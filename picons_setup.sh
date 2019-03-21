@@ -10,7 +10,7 @@ fi
 
 apt-get -y update
 apt-get -y upgrade
-apt-get install build-essential python-dev python-smbus git php-cli
+apt-get install build-essential python-dev python-smbus git php-cli rng-tools
 cd /home/pi/Downloads/
 mkdir libs
 cd libs
