@@ -14,8 +14,7 @@ apt-get install build-essential python-dev python-smbus git php-cli rng-tools ch
 pip install mcp3008
 pip install dicttoxml
 cd /home/pi
-chmod -R 0777 /home/pi/PiCons
-chown -R $USER:$USER /home/pi/PiCons
+chmod -R +x /home/pi/PiCons
 cd /home/pi/.config/
 mkdir autostart
 cp /home/pi/PiCons/autoChromium.desktop /home/pi/.config/autostart/autoChromium.desktop
