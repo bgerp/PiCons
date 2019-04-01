@@ -62,10 +62,9 @@ import threading
 # @see http://makezine.com/projects/tutorial-raspberry-pi-gpio-pins-and-python/
 import RPi.GPIO as GPIO
 
-## Adafruit IO controlling library.
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_MCP3008
-
+## RPi_mcp3008 is a library to listen to the MCP3008 A/D converter chip with a RPi.
+# @see https://pypi.org/project/mcp3008/
+import mcp3008
 
 ## IOBoard class
 #
@@ -88,6 +87,9 @@ class IOBoard():
     # @see http://makezine.com/projects/tutorial-raspberry-pi-gpio-pins-and-python/
     __input_states = [False, False, False, False, False, False]
 
+    ## Analog inputs map.
+    __analog_inputs_map = [8, 9, 10, 11, 12, 13, 14, 15]
+    
     ## Output pin array len.
     __output_len = 0
 
@@ -144,7 +146,7 @@ class IOBoard():
         self.init_c1()
         self.init_c2()
         
-        self.__mcp = Adafruit_MCP3008.MCP3008(clk=self.__CLK, cs=self.__CS, miso=self.__MISO, mosi=self.__MOSI)
+        self.__mcp = mcp3008.MCP3008() #Adafruit_MCP3008.MCP3008(clk=self.__CLK, cs=self.__CS, miso=self.__MISO, mosi=self.__MOSI)
 
         self.__output_len = len(self.__output_pins)
         self.__input_len = len(self.__input_pins)
@@ -312,7 +314,7 @@ class IOBoard():
             return 0.0
             
         # Return data from ADC.
-        adc = self.__mcp.read_adc(index)
+        adc = self.__mcp.read([self.__analog_inputs_map[index]])[0]
         values[i] = self.__from0to10(float(adc))
         return values[i]
 
@@ -322,10 +324,10 @@ class IOBoard():
     def get_analogs(self):
         values = [0]*8
         
-        for i in range(8):
+        for index in range(8):
             # The read_adc function will get the value of the specified channel (0-7).
-            adc = self.__mcp.read_adc(i)
-            values[i] = self.__from0to10(float(adc))
+            adc = self.__mcp.read([self.__analog_inputs_map[index]])[0]
+            values[index] = self.__from0to10(float(adc))
         
         # Return data from ADC.
         return values
