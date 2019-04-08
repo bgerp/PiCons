@@ -36,20 +36,20 @@ https://opensource.org/licenses/MIT
 
 ## Setup the software.
 1. Enable SPI:
-        - pi@picons:~ $ sudo raspi-config.
-        - Use the down arrow to select 5 Interfacing Options
-        - Arrow down to P4 SPI.
-        - Select yes when it asks you to enable SPI,
-        - Also select yes if it asks about automatically loading the kernel module.
-        - Use the right arrow to select the <Finish> button.
+ - pi@picons:~ $ sudo raspi-config.
+ - Use the down arrow to select 5 Interfacing Options
+ - Arrow down to P4 SPI.
+ - Select yes when it asks you to enable SPI,
+ - Also select yes if it asks about automatically loading the kernel module.
+ - Use the right arrow to select the <Finish> button.
 2. Disable login shell over serial
-        - pi@picons:~ $ sudo raspi-config.
-        - Use the down arrow to select 5 Interfacing Options
-        - Arrow down to P6 Serial.
-        - Would you like a login shell to be accessible over │ serial? #No
-        - Would you like the serial port hardware to be enabled? #Yes
-        - Use the right arrow to select the <Finish> button. 
-        - Select yes when it asks to reboot  
+ - pi@picons:~ $ sudo raspi-config.
+ - Use the down arrow to select 5 Interfacing Options
+ - Arrow down to P6 Serial.
+ - Would you like a login shell to be accessible over │ serial? #No
+ - Would you like the serial port hardware to be enabled? #Yes
+ - Use the right arrow to select the <Finish> button. 
+ - Select yes when it asks to reboot  
 
 3. Go to home directory.
 
