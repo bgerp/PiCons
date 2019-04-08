@@ -35,24 +35,39 @@ This code is released under the MIT License.
 https://opensource.org/licenses/MIT
 
 ## Setup the software.
+1. Enable SPI:
+        - pi@picons:~ $ sudo raspi-config.
+        - Use the down arrow to select 5 Interfacing Options
+        - Arrow down to P4 SPI.
+        - Select yes when it asks you to enable SPI,
+        - Also select yes if it asks about automatically loading the kernel module.
+        - Use the right arrow to select the <Finish> button.
+2. Disable login shell over serial
+        - pi@picons:~ $ sudo raspi-config.
+        - Use the down arrow to select 5 Interfacing Options
+        - Arrow down to P6 Serial.
+        - Would you like a login shell to be accessible over │ serial? #No
+        - Would you like the serial port hardware to be enabled? #Yes
+        - Use the right arrow to select the <Finish> button. 
+        - Select yes when it asks to reboot  
 
-1. Go to home directory.
+3. Go to home directory.
 
         cd ~
 
-2. Download the software from the repository.
+4. Download the software from the repository.
 
         sudo git clone https://github.com/bgerp/PiCons.git
 
-3. Go to PiCons directory.
+5. Go to PiCons directory.
 
         cd PiCons
 
-4. Setup the software.
+6. Setup the software.
 
         sudo bash picons_setup.sh
 
-5. the device will autmaticly reboot affter instalation.
+7. the device will autmaticly reboot affter instalation.
 
 ## To make the tests of the device. 
 
