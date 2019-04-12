@@ -148,6 +148,8 @@ class IOServiceHandler(BaseHTTPRequestHandler):
     ## Text representation of logic level 1.
     __STATE_HIGH = '1'
 
+    ## Get the key.
+    
     ## Handler for the GET requests.
     #  @param self The object pointer.
     def do_GET(self):

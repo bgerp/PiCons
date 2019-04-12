@@ -66,8 +66,12 @@ class AppSettings():
 
     ## Full path to the settings file.
     __full_path = 'settings.ini'
+    
     ## Configuration parser.
     __config = ConfigParser.ConfigParser()
+    
+    ## Configuration parser.
+    __enable_write_in_file = False
     
     ## Constructor
     #  @param self The object pointer.
@@ -80,11 +84,16 @@ class AppSettings():
             raise ValueError('Must enter file path.')       
                 
         self.__full_path = full_path
-                
+        
+        self.__config.read(self.__full_path)
+        
     ## Destructor
     #  @param self The object pointer.
     def __del__(self):
-        pass
+        # Update file.
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
 
     ## Create default settings.
     #  @param self The object pointer.
@@ -128,16 +137,20 @@ class AppSettings():
         self.__config.add_section('DEVICE')
         self.__config.set('DEVICE', 'Name', 'D19')
 
+        # Update file.
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
         
-        with open(self.__full_path, 'w') as configfile:\
-            self.__config.write(configfile)
-
+        # Read file.
+        self.__config.read(self.__full_path)
+        
     ## Update credentials.
     #  @param self The object pointer.
     #  @param user Username for this device.
     #  @param password Password for this device.
     def update_credentials(self, user, password):
-        self.__config.read(self.__full_path)
+
         
         if(user != None):
             self.__config.set('CREDENTIALS', 'user', user)
@@ -145,14 +158,14 @@ class AppSettings():
         if(user != None):
             self.__config.set('CREDENTIALS', 'pass', password)
             
-        with open(self.__full_path, 'w') as configfile:\
-            self.__config.write(configfile)
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
 
     ## Get credentials
     #  @param self The object pointer.
     #  @return Array of the credentials. (user, pass)
     def get_credentials(self):
-        self.__config.read(self.__full_path)
         user = self.__config.get('CREDENTIALS', 'user')
         password = self.__config.get('CREDENTIALS', 'pass')
         return (user, password)
@@ -161,7 +174,6 @@ class AppSettings():
     #  @param self The object pointer.
     #  @return Returns BASE64 string with the credentials encoded.
     def get_credentials_as_b64(self):
-        self.__config.read(self.__full_path)
         user = self.__config.get('CREDENTIALS', 'user')
         password = self.__config.get('CREDENTIALS', 'pass')
         return base64.b64encode(user + ':' + password)
@@ -171,8 +183,6 @@ class AppSettings():
     #  @param cnt1 Counter 1 value.
     #  @param cnt2 Counter 2 value.
     def update_counters(self, cnt1, cnt2):
-        self.__config.read(self.__full_path)
-        
         if(cnt1 > 0):
             tmp_cnt1 = self.__config.get('COUNTERS', 'CounterInput1', cnt1)
             self.__config.set('COUNTERS', 'CounterInput1', tmp_cnt1 + cnt1)
@@ -180,16 +190,15 @@ class AppSettings():
         if(cnt2 > 0):
             self.__config.set('COUNTERS', 'CounterInput2', cnt2)
             
-        with open(self.__full_path, 'w') as configfile:\
-            self.__config.write(configfile)
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
 
     ## Add counters values.
     #  @param self The object pointer.
     #  @param cnt1 Counter 1 value.
     #  @param cnt2 Counter 2 value.
-    def add_counters(self, cnt1, cnt2):
-        self.__config.read(self.__full_path)
-        
+    def add_counters(self, cnt1, cnt2):       
         if(cnt1 > 0):
             tmp_cnt1 = self.__config.get('COUNTERS', 'CounterInput1')
             self.__config.set('COUNTERS', 'CounterInput1', int(tmp_cnt1) + cnt1)
@@ -198,33 +207,32 @@ class AppSettings():
             tmp_cnt2 = self.__config.get('COUNTERS', 'CounterInput2')
             self.__config.set('COUNTERS', 'CounterInput2', int(tmp_cnt2) + cnt2)
             
-        with open(self.__full_path, 'w') as configfile:\
-            self.__config.write(configfile)
-
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
+    
     ## Returns counters values.
     #  @param self The object pointer.
     #  @return Returns arrray of counters values. (cnt1, cnt2)
     def get_counters(self):
-        self.__config.read(self.__full_path)
         cnt1 = self.__config.get('COUNTERS', 'CounterInput1')
         cnt2 = self.__config.get('COUNTERS', 'CounterInput2')
         return (cnt1, cnt2)
-
+    
     ## Update counters values.
     #  @param self The object pointer.
     #  @param cnt1 Counter 1 value. It hase default value of 0.
     #  @param cnt2 Counter 2 value. It hase default value of 0.
     def reset_counters(self, cnt1 = 0, cnt2 = 0):
-        self.__config.read(self.__full_path)
         self.__config.set('COUNTERS', 'CounterInput1', cnt1)            
         self.__config.set('COUNTERS', 'CounterInput2', cnt2)
             
-        with open(self.__full_path, 'w') as configfile:\
-            self.__config.write(configfile)
-
+        if(self.____enable_write_in_file):
+            with open(self.__full_path, 'w') as configfile:\
+                self.__config.write(configfile)
+    
     ## Returns counters values.
     #  @param self The object pointer.
     #  @return Returns device name.
     def get_device_name(self):
-        self.__config.read(self.__full_path)
         return self.__config.get('DEVICE', 'Name')

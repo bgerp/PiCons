@@ -117,7 +117,7 @@ class IOBoard():
 
     ## MCP3008 driver instance.
     #  @see https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
-    __mcp = None
+    __adc = None
 
     ## Software debounce flags.
     __debounce_flags = [True, True]
@@ -146,7 +146,7 @@ class IOBoard():
         self.init_c1()
         self.init_c2()
         
-        self.__mcp = mcp3008.MCP3008() #Adafruit_MCP3008.MCP3008(clk=self.__CLK, cs=self.__CS, miso=self.__MISO, mosi=self.__MOSI)
+        self.__adc = mcp3008.MCP3008() #Adafruit_MCP3008.MCP3008(clk=self.__CLK, cs=self.__CS, miso=self.__MISO, mosi=self.__MOSI)
 
         self.__output_len = len(self.__output_pins)
         self.__input_len = len(self.__input_pins)
@@ -314,7 +314,7 @@ class IOBoard():
             return 0.0
             
         # Return data from ADC.
-        adc = self.__mcp.read([self.__analog_inputs_map[index]])[0]
+        adc = self.__adc.read([self.__analog_inputs_map[index]])[0]
         values[i] = self.__from0to10(float(adc))
         return values[i]
 
@@ -326,7 +326,7 @@ class IOBoard():
         
         for index in range(8):
             # The read_adc function will get the value of the specified channel (0-7).
-            adc = self.__mcp.read([self.__analog_inputs_map[index]])[0]
+            adc = self.__adc.read([self.__analog_inputs_map[index]])[0]
             values[index] = self.__from0to10(float(adc))
         
         # Return data from ADC.
