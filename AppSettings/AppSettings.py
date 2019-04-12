@@ -91,7 +91,7 @@ class AppSettings():
     #  @param self The object pointer.
     def __del__(self):
         # Update file.
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
 
@@ -138,7 +138,7 @@ class AppSettings():
         self.__config.set('DEVICE', 'Name', 'D19')
 
         # Update file.
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
         
@@ -158,7 +158,7 @@ class AppSettings():
         if(user != None):
             self.__config.set('CREDENTIALS', 'pass', password)
             
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
 
@@ -190,7 +190,7 @@ class AppSettings():
         if(cnt2 > 0):
             self.__config.set('COUNTERS', 'CounterInput2', cnt2)
             
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
 
@@ -207,7 +207,7 @@ class AppSettings():
             tmp_cnt2 = self.__config.get('COUNTERS', 'CounterInput2')
             self.__config.set('COUNTERS', 'CounterInput2', int(tmp_cnt2) + cnt2)
             
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
     
@@ -227,7 +227,7 @@ class AppSettings():
         self.__config.set('COUNTERS', 'CounterInput1', cnt1)            
         self.__config.set('COUNTERS', 'CounterInput2', cnt2)
             
-        if(self.____enable_write_in_file):
+        if(self.__enable_write_in_file):
             with open(self.__full_path, 'w') as configfile:\
                 self.__config.write(configfile)
     
