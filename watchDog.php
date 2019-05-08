@@ -29,7 +29,7 @@ if (strlen($value)<2) {
 }
 
 // 20 % от пусканията рестартираме PiCons сървъра, защото по незнайни причини се губи теглото.
-if ( rnd(1,5)%4 == 0 ) {
+if (rand(1,5)%4 == 0) {
     `sudo pkill python`;
     `sudo python /home/pi/PiCons/main.py > /dev/null 2>&1 &`;
 }
