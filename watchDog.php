@@ -28,4 +28,10 @@ if (strlen($value)<2) {
 	exit;
 }
 
+// на всеки 5 мин рестартираме PiCons сървъра, защото по незнайни причини се губи теглото.
+if ( time()%300 == 0 ) {
+    `sudo pkill python`;
+    `sudo python /home/pi/PiCons/main.py > /dev/null 2>&1 &`;
+}
+
 // file_put_contents('/home/pi/PiCons/watchDog.log',date("Y-m-d H:i:s") . " - OK ... \n", FILE_APPEND);
