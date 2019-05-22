@@ -21,6 +21,7 @@ $xml = exec('curl -s --connect-timeout 3 --max-time 3 http://localhost/?Electron
 $value = value_in('Value',$xml); //var_dump(is_float($value)); die;
 if (strlen($value)<2) {
 	`sudo pkill python`;
+    sleep(1);
 	`git --work-tree="/home/pi/PiCons/" checkout settings.ini`;
 	`sudo python /home/pi/PiCons/main.py > /dev/null 2>&1 &`;
 	file_put_contents('/home/pi/PiCons/watchDog.log',date("Y-m-d H:i:s") . " - restarted ... \n", FILE_APPEND);
@@ -31,7 +32,9 @@ if (strlen($value)<2) {
 // 20 % от пусканията рестартираме PiCons сървъра, защото по незнайни причини се губи теглото.
 if (rand(1,5)%4 == 0) {
     `sudo pkill python`;
+    sleep(1);
     `sudo python /home/pi/PiCons/main.py > /dev/null 2>&1 &`;
+    file_put_contents('/home/pi/PiCons/watchDog.log',date("Y-m-d H:i:s") . " - RAND restarted ... \n", FILE_APPEND);
 }
 
 // file_put_contents('/home/pi/PiCons/watchDog.log',date("Y-m-d H:i:s") . " - OK ... \n", FILE_APPEND);
