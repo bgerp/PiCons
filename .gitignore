@@ -471,6 +471,10 @@ MigrationBackup/
 # Ignore all local history of files
 .history
 
+### VisualStudioCode ###
+# Ignore all local history of files
+.vscode
+
 ### Logs
 ### Ignore logs.
 logs/
