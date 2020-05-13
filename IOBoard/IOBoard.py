@@ -122,7 +122,7 @@ class IOBoard():
     ## Software debounce flags.
     __debounce_flags = [True, True]
 
-    ## Sfotware debounce time.
+    ## Software debounce time.
     __debounce_time = 0.04
 
     ## Constructor
@@ -153,7 +153,7 @@ class IOBoard():
 
     ## Destructor
     #  @param self The object pointer.
-    def __del__():
+    def __del__(self):
         # Cleanup he GPIO values.
         GPIO.cleanup()
 
@@ -287,38 +287,38 @@ class IOBoard():
         self.__soft_debounce_2 = False
         GPIO.add_event_detect(self.__input_pins[1], GPIO.FALLING, callback=self.__worker_c2)
 
-    ## Retuens counter 1 value.
+    ## Returns counter 1 value.
     #  @param self The object pointer.
     #  @return Counter 1 value.
     def get_counter1(self):
         return self.__counters_values[0]
 
-    ## Retuens counter 2 value.
+    ## Returns counter 2 value.
     #  @param self The object pointer.
     #  @return Counter 2 value.
     def get_counter2(self):
         return self.__counters_values[1]
 
-    ## Retuens counters values.
+    ## Returns counters values.
     #  @param self The object pointer.
     #  @return Counters values. (c1, c2)
     def get_counters(self):
         return self.__counters_values
 
-    ## Retuens analog inputs values.
+    ## Returns analog inputs values.
     #  @param self The object pointer.
     #  @param index Index of the analog input.
     #  @return Analog chanel value.
     def get_analog(self, index):
         if(index > 7 or index < 0):
             return 0.0
-            
+        
         # Return data from ADC.
         adc = self.__adc.read([self.__analog_inputs_map[index]])[0]
         values[i] = self.__from0to10(float(adc))
         return values[i]
 
-    ## Retuens analogs inputs values.
+    ## Returns analogs inputs values.
     #  @param self The object pointer.
     #  @return Analog chanels values. (a0 ... a7)
     def get_analogs(self):
@@ -360,16 +360,19 @@ class IOBoard():
             return
             
         processThread = threading.Thread(target=self.__timed_output_set_worker, args=[index, time_to_live])
-        processThread.start();
+        processThread.start()
     
     ## Thread worker method for timed outputs.
     #  @param index Index of the analog input.
     #  @param time_to_live Time to live.
     def __timed_output_set_worker(self, index, time_to_live):
-        # 1. Swich On the GPIO(index)
+
+        # 1. Switch On the GPIO(index)
         self.set_output(index, True)
+
         # 2. Wait (time)
         time.sleep(float(time_to_live))
-        # 3. Swich Off the GPIO(index)
+
+        # 3. Switch Off the GPIO(index)
         self.set_output(index, False)
         

@@ -75,11 +75,13 @@ class AppSettings():
     
     ## Constructor
     #  @param self The object pointer.
-    #  @param full_path This is the path to the settings file. It hase default value the name of the settings file.
+    #  @param full_path This is the path to the settings file. It has default value the name of the settings file.
     def __init__(self, full_path='settings.ini'):
         # Check the serial port name.
+
         if(full_path == None):
             raise ValueError('Must enter path.')
+
         elif(os.path.exists(full_path) == False):
             raise ValueError('Must enter file path.')       
                 
@@ -111,12 +113,12 @@ class AppSettings():
         #self.__config.set('OUTPUTS', 'Relay4Description', 'Relay 4')
         
         #self.__config.add_section('INPUTS')
-        #self.__config.set('INPUTS', 'DigitalInput1Description', 'Digital In1')
-        #self.__config.set('INPUTS', 'DigitalInput2Description', 'Digita2 In2')
-        #self.__config.set('INPUTS', 'DigitalInput3Description', 'Digita3 In3')
-        #self.__config.set('INPUTS', 'DigitalInput4Description', 'Digita4 In4')
-        #self.__config.set('INPUTS', 'DigitalInput5Description', 'Digita5 In5')
-        #self.__config.set('INPUTS', 'DigitalInput6Description', 'Digita6 In6')
+        #self.__config.set('INPUTS', 'DigitalInput1Description', 'Digitall In1')
+        #self.__config.set('INPUTS', 'DigitalInput2Description', 'Digital2 In2')
+        #self.__config.set('INPUTS', 'DigitalInput3Description', 'Digital3 In3')
+        #self.__config.set('INPUTS', 'DigitalInput4Description', 'Digital4 In4')
+        #self.__config.set('INPUTS', 'DigitalInput5Description', 'Digital5 In5')
+        #self.__config.set('INPUTS', 'DigitalInput6Description', 'Digital6 In6')
         
         #self.__config.add_section('ANALOGS')
         #self.__config.set('ANALOGS', 'AnalogInput1Description', 'Analog Inp1')
@@ -130,7 +132,7 @@ class AppSettings():
         
         self.__config.add_section('COUNTERS')
         #self.__config.set('COUNTERS', 'CounterInput1Description', 'Counterl In1')
-        #self.__config.set('COUNTERS', 'CounterInput2Description', 'Counterl In2')
+        #self.__config.set('COUNTERS', 'CounterInput2Description', 'Counter2 In2')
         self.__config.set('COUNTERS', 'CounterInput1', '0')
         self.__config.set('COUNTERS', 'CounterInput2', '0')
 
@@ -170,7 +172,7 @@ class AppSettings():
         password = self.__config.get('CREDENTIALS', 'pass')
         return (user, password)
 
-    ## Get credentials as BASE64 encodet directly for HTTP Auth.
+    ## Get credentials as BASE64 encoded directly for HTTP Auth.
     #  @param self The object pointer.
     #  @return Returns BASE64 string with the credentials encoded.
     def get_credentials_as_b64(self):
@@ -221,8 +223,8 @@ class AppSettings():
     
     ## Update counters values.
     #  @param self The object pointer.
-    #  @param cnt1 Counter 1 value. It hase default value of 0.
-    #  @param cnt2 Counter 2 value. It hase default value of 0.
+    #  @param cnt1 Counter 1 value. It has default value of 0.
+    #  @param cnt2 Counter 2 value. It has default value of 0.
     def reset_counters(self, cnt1 = 0, cnt2 = 0):
         self.__config.set('COUNTERS', 'CounterInput1', cnt1)            
         self.__config.set('COUNTERS', 'CounterInput2', cnt2)

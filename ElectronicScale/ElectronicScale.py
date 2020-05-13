@@ -135,13 +135,13 @@ class ElectronicScale():
                 raise Exception('Invalid data.', data)
                 
             # Split data by new line.
-            splited_response = data.split('\r\n')
+            splitted_response = data.split('\r\n')
                         
-            # If splited array is longer then minimum chunk length proceed.
-            if(len(splited_response) >= self.__min_chunk_len):
+            # If splitted array is longer then minimum chunk length proceed.
+            if(len(splitted_response) >= self.__min_chunk_len):
                 
                 # Get the second line. Remove new line and split by ',' (CSV).
-                splited_csv = splited_response[self.__min_chunk_len - 1].replace('\r\n', '').split(',')
+                splited_csv = splitted_response[self.__min_chunk_len - 1].replace('\r\n', '').split(',')
                 
                 if(len(splited_csv) != 3):
                     raise Exception('Invalid package size.', len(splited_csv))
@@ -168,16 +168,16 @@ class ElectronicScale():
                     tmp_key_index = key_index
                     
                 if(tmp_key_index == len(self.__keys_unit) - 1):
-                    raise Exception('Invalid unit.', splited_response[self.__min_chunk_len - 1])
+                    raise Exception('Invalid unit.', splitted_response[self.__min_chunk_len - 1])
                 
                 ## If first element is 'ST' this means stable.
                 #if(splited_csv[self.__keys_csv['state']] == self.__keys_state['stable']):
                 #    pass
                 #else:
-                #    raise Exception('Unstable value.', splited_response[self.__min_chunk_len - 1])
+                #    raise Exception('Unstable value.', splitted_response[self.__min_chunk_len - 1])
                     
             else:
-                raise Exception('Invalid data length.', len(splited_response))
+                raise Exception('Invalid data length.', len(splitted_response))
                 
         else:
             raise Exception('No data.', data)
@@ -196,7 +196,7 @@ class ElectronicScale():
         if(self.__serial_port.isOpen()):
             self.__serial_port.close()
     
-    ## Get the weight of the objec on top of the scale.
+    ## Get the weight of the object on top of the scale.
     #  @param self The object pointer.
     def get_weight(self):
         
@@ -204,7 +204,7 @@ class ElectronicScale():
         response = ''        
         
         # Read the response.
-        for bytes in range(self.__message_length):
+        for b in range(self.__message_length):
             response += self.__serial_port.read(1)
             
         # Return data.
