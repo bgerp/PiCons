@@ -1,0 +1,12 @@
+ST,GS,+   5.16kg
+US,GS,+  27.26kg
+
+ST,GS,+      0 g
+US,GS,+  23550 g
+
+ST,GS,+   0.00lb
+US,GS,+  61.36lb
+
+ST,GS,+    0.0oz
+US,GS,+ 1071.0oz
+
