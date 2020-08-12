@@ -82,7 +82,7 @@ from KioskSettings import KioskSettings
 #  This class will handles any incoming request from the clients.
 class IOServiceHandler(BaseHTTPRequestHandler):
     
-    ## IO board abstraction driver.
+    ## IO board abstracion driver.
     __board = IOBoard.IOBoard()
     
     ## Application settings.
@@ -218,17 +218,15 @@ class IOServiceHandler(BaseHTTPRequestHandler):
     ## Translate relative path to absolute.
     #  @param self The object pointer.
     #  @param url_path relative path from the request.
-    def __from_relative_to_absolute(self, url_path):
+    def __from_realative_to_absolute(self, url_path):
         
-        current_path = os.path.dirname(os.path.realpath(__file__))
-        full_path = current_path + url_path
-
+        curent_path = os.path.dirname(os.path.realpath(__file__))
+        full_path = curent_path + url_path
         if(os.name == 'nt'):
             full_path = full_path.replace('/', '\\')
         
         if(os.path.isdir(full_path) == True):
             full_path = os.path.join(full_path, self.__default_file_name)
-
         elif(os.path.isfile(full_path) == True):
             full_path = full_path
             
@@ -289,10 +287,10 @@ class IOServiceHandler(BaseHTTPRequestHandler):
     
     ## Generate entry.
     #  @param self The object pointer.
-    #  @param units Units of the measurement in the entry.
+    #  @param units Units of the mesurment in the entry.
     #  @param id ID of the entry.
     #  @param name Name of the entry.
-    #  @param value Value of the measurement.
+    #  @param value Value of the mesurment.
     def __generate_entry(self, units, id, name, value):
         entry = dict()
         
@@ -310,7 +308,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
         
         query_dict = dict()
         
-        # Entry container list.
+        # Entrys container list.
         entries = []
         
         if(url_query != None):
@@ -318,7 +316,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             ucq_dict = parse_qs(url_query)
             query_dict = dict([(str(key), str(value[0])) for key, value in ucq_dict.items()])
         
-        # If relay 1 is in the arguments prase it.
+        # If relay 1 is in the arguments prse it.
         if(self.__RELAY_1 in query_dict):
             state = query_dict[self.__RELAY_1]
             if(state == "0"):
@@ -326,7 +324,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             if(state == "1"):
                 self.__board.set_output(0, True)
                 
-        # If relay 2 is in the arguments prase it.
+        # If relay 2 is in the arguments prse it.
         if(self.__RELAY_2 in query_dict):
             state = query_dict[self.__RELAY_2]
             if(state == "0"):
@@ -334,7 +332,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             if(state == "1"):
                 self.__board.set_output(1, True)
                 
-        # If relay 3 is in the arguments prase it.
+        # If relay 3 is in the arguments prse it.
         if(self.__RELAY_3 in query_dict):
             state = query_dict[self.__RELAY_3]
             if(state == "0"):
@@ -342,7 +340,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             if(state == "1"):
                 self.__board.set_output(2, True)
                 
-        # If relay 4 is in the arguments prase it.
+        # If relay 4 is in the arguments prse it.
         if(self.__RELAY_4 in query_dict):
             state = query_dict[self.__RELAY_4]
             if(state == "0"):
@@ -350,35 +348,35 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             if(state == "1"):
                 self.__board.set_output(3, True)
                 
-        # If toggle relay 1 is in the arguments prase it.
+        # If toggle relay 1 is in the arguments prse it.
         if(self.__TOGGLE_RELAY_1 in query_dict):
             state = str(query_dict[self.__TOGGLE_RELAY_1][0])
             if(state == "1"):
                 state = not self.__board.get_output(0)
                 self.__board.set_output(0, state)
                 
-        # If toggle relay 2 is in the arguments prase it.
+        # If toggle relay 2 is in the arguments prse it.
         if(self.__TOGGLE_RELAY_2 in query_dict):
             state = query_dict[self.__TOGGLE_RELAY_2]
             if(state == "1"):
                 state = not self.__board.get_output(1)
                 self.__board.set_output(1, state)
                 
-        # If toggle relay 3 is in the arguments prase it.
+        # If toggle relay 3 is in the arguments prse it.
         if(self.__TOGGLE_RELAY_3 in query_dict):
             state = query_dict[self.__TOGGLE_RELAY_3]
             if(state == "1"):
                 state = not self.__board.get_output(2)
                 self.__board.set_output(2, state)
                 
-        # If toggle relay 4 is in the arguments prase it.
+        # If toggle relay 4 is in the arguments prse it.
         if(self.__TOGGLE_RELAY_4 in query_dict):
             state = query_dict[self.__TOGGLE_RELAY_4]
             if(state == "1"):
                 state = not self.__board.get_output(3)
                 self.__board.set_output(3, state)
                 
-        # If pulse relay 1 is in the arguments prase it.
+        # If pulse relay 1 is in the arguments prse it.
         if(self.__PULSE_RELAY_1 in query_dict):
             sTime = query_dict[self.__PULSE_RELAY_1]
             try:
@@ -387,7 +385,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             except:
                 pass
                 
-        # If pulse relay 2 is in the arguments prase it.
+        # If pulse relay 2 is in the arguments prse it.
         if(self.__PULSE_RELAY_2 in query_dict):
             sTime = query_dict[self.__PULSE_RELAY_2]
             try:
@@ -396,7 +394,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             except:
                 pass
                 
-        # If pulse relay 3 is in the arguments prase it.
+        # If pulse relay 3 is in the arguments prse it.
         if(self.__PULSE_RELAY_3 in query_dict):
             sTime = query_dict[self.__PULSE_RELAY_3]
             try:
@@ -405,7 +403,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             except:
                 pass
                 
-        # If pulse relay 4 is in the arguments prase it.
+        # If pulse relay 4 is in the arguments prse it.
         if(self.__PULSE_RELAY_4 in query_dict):
             sTime = query_dict[self.__PULSE_RELAY_4]
             try:
@@ -414,7 +412,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             except:
                 pass
                 
-        # If kiosk browser address is in the arguments prase it.
+        # If kiosk browser address is in the arguments prse it.
         if(self.__KIOSK_ADDRESS in query_dict):
             b64address = query_dict[self.__KIOSK_ADDRESS]
             try:
@@ -424,7 +422,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
                 print e
                 pass
                 
-        # If kiosk browser default settings is in the arguments prase it.
+        # If kiosk browser default settings is in the arguments prse it.
         if(self.__KIOSK_DEFAULT in query_dict):
             value = query_dict[self.__KIOSK_DEFAULT]
             try:
@@ -463,23 +461,23 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             elif(indexes <> ''):
 
                 # Split by coma.
-                indexes_splitted = indexes.split(',')
+                indexes_splited = indexes.split(',')
 
-                # Remove duplicates and sort.
-                indexes_splitted = sorted(list(set(indexes_splitted)))
+                # Remove dublicates and sort.
+                indexes_splited = sorted(list(set(indexes_splited)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_splitted)):
-                    if(indexes_splitted[index] in self.__RO['id']):
+                for index in range(len(indexes_splited)):
+                    if(indexes_splited[index] in self.__RO['id']):
                         
                         # Get ID of the entry item.
-                        id = self.__RO['id'][indexes_splitted[index]]
+                        id = self.__RO['id'][indexes_splited[index]]
 
                         # Get value of the entry item.
                         value = self.__STATE_HIGH if relay_outputs[index] else self.__STATE_LOW
                         
                         # Create name of the entry item.
-                        name = self.__RO['name'] + indexes_splitted[index]
+                        name = self.__RO['name'] + indexes_splited[index]
                         
                         # Generate entry item.
                         entry = self.__generate_entry(self.__RO['unit'], id, name, value)
@@ -519,24 +517,24 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             elif(indexes <> ''):
 
                 # Split by coma.
-                indexes_splitted = indexes.split(',')
+                indexes_splited = indexes.split(',')
 
-                # Remove duplicates and sort.
-                indexes_splitted = sorted(list(set(indexes_splitted)))
+                # Remove dublicates and sort.
+                indexes_splited = sorted(list(set(indexes_splited)))
 
 
                 # If the length is grater then one.
-                for index in range(len(indexes_splitted)):
-                    if(indexes_splitted[index] in self.__DI['id']):
+                for index in range(len(indexes_splited)):
+                    if(indexes_splited[index] in self.__DI['id']):
                     
                         # Get ID of the entry item.
-                        id = self.__DI['id'][indexes_splitted[index]]
+                        id = self.__DI['id'][indexes_splited[index]]
                     
                         # Get value of the entry item.
                         value = self.__STATE_HIGH if digital_inputs[index] else self.__STATE_LOW
                         
                         # Create nama of the entry item.
-                        name = self.__DI['name'] + indexes_splitted[index]
+                        name = self.__DI['name'] + indexes_splited[index]
                         
                         # Generate entry item.
                         entry = self.__generate_entry(self.__DI['unit'], id, name, value)
@@ -582,23 +580,23 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             elif(indexes <> ''):
 
                 # Split by coma.
-                indexes_splitted = indexes.split(',')
+                indexes_splited = indexes.split(',')
 
-                # Remove duplicates and sort.
-                indexes_splitted = sorted(list(set(indexes_splitted)))
+                # Remove dublicates and sort.
+                indexes_splited = sorted(list(set(indexes_splited)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_splitted)):
-                    if(indexes_splitted[index] in self.__CI['id']):
+                for index in range(len(indexes_splited)):
+                    if(indexes_splited[index] in self.__CI['id']):
                     
                         # Get ID of the entry item.
-                        id = self.__CI['id'][indexes_splitted[index]]
+                        id = self.__CI['id'][indexes_splited[index]]
                     
                         # Get value of the entry item.
                         value = counters_inputs[index]
                         
                         # Create name of the entry item.
-                        name = self.__CI['name'] + indexes_splitted[index]
+                        name = self.__CI['name'] + indexes_splited[index]
                         
                         # Generate entry item.
                         entry = self.__generate_entry(self.__CI['unit'], id, name, value)
@@ -612,10 +610,10 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             # Get content from the arguments.
             indexes = query_dict[self.__AI['key']]
             
-            # Read analog analog inputs.
-            analog_inputs = self.__board.get_analogs()
+            # Read analog alaog inputs.
+            alaog_inputs = self.__board.get_analogs()
             
-            # If the key is all then get all relay analog inputs.
+            # If the key is all then get all relay alaog inputs.
             if(indexes == 'all'):
                 for index in range(len(self.__AI['id'])):
                     
@@ -623,7 +621,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
                     id = self.__AI['id'][str(index + 1)]
                     
                     # Get value of the entry item.
-                    value = analog_inputs[index]
+                    value = alaog_inputs[index]
                     
                     # Create nama of the entry item.
                     name = self.__AI['name'] + str(index + 1)
@@ -638,20 +636,20 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             elif(indexes <> ''):
 
                 # Split by coma.
-                indexes_splitted = indexes.split(',')
+                indexes_splited = indexes.split(',')
 
-                # Remove duplicates.
-                indexes_splitted = list(set(indexes_splitted))
+                # Remove dublicates.
+                indexes_splited = list(set(indexes_splited))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_splitted)):
-                    if(indexes_splitted[index] in self.__AI['id']):
+                for index in range(len(indexes_splited)):
+                    if(indexes_splited[index] in self.__AI['id']):
                     
                         # Get ID of the entry item.
-                        id = self.__AI['id'][indexes_splitted[index]]
+                        id = self.__AI['id'][indexes_splited[index]]
                     
                         # Get value of the entry item.
-                        value = analog_inputs[index]
+                        value = alaog_inputs[index]
                         
                         # Create nama of the entry item.
                         name = self.__AI['name'] + str(index + 1)
@@ -668,16 +666,16 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             # Get content from the arguments.
             indexes = query_dict[self.__ES['key']]
             
-            measurements = None
+            mesurment = None
             
             # Read the electronic scale.
             try:
-                measurements = ElectronicScale.ElectronicScale.static_get_weight('/dev/serial0') # '/dev/serial0'
+                mesurment = ElectronicScale.ElectronicScale.static_get_weight('/dev/serial0') # '/dev/serial0'
                 
             # Catch exception.
             except Exception as exception:
                 error_text = str(exception.args[0])
-                measurements = ElectronicScale.Measurement.Measurement(error_text, '')
+                mesurment = ElectronicScale.Measurement.Measurement(error_text, '')
                 
                 print "Electronic scale exception: " + error_text
                 # TODO: Log the error for a week.
@@ -688,7 +686,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
 
             # Data container.
             es_inputs = []
-            es_inputs.append(measurements)
+            es_inputs.append(mesurment)
             
             # If the key is all then get all electronic scales.
             if(indexes == 'all'):
@@ -700,7 +698,7 @@ class IOServiceHandler(BaseHTTPRequestHandler):
                     # Create nama of the entry item.
                     name = self.__ES['name'] + str(index + 1)
                     
-                    # Temporal fields.
+                    # Tmporal fields.
                     value = ''
                     unit = ''
                     
@@ -720,22 +718,22 @@ class IOServiceHandler(BaseHTTPRequestHandler):
             elif(indexes <> ''):
 
                 # Split by coma.
-                indexes_splitted = indexes.split(',')
+                indexes_splited = indexes.split(',')
 
                 # Remove dublicates and sort.
-                indexes_splitted = sorted(list(set(indexes_splitted)))
+                indexes_splited = sorted(list(set(indexes_splited)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_splitted)):
-                    if(indexes_splitted[index] in self.__ES['id']):
+                for index in range(len(indexes_splited)):
+                    if(indexes_splited[index] in self.__ES['id']):
                     
                         # Get ID of the entry item.
-                        id = self.__ES['id'][indexes_splitted[index]]
+                        id = self.__ES['id'][indexes_splited[index]]
                         
                         # Create nama of the entry item.
-                        name = self.__ES['name'] + indexes_splitted[index]
+                        name = self.__ES['name'] + indexes_splited[index]
                         
-                        # Temporal fields.
+                        # Tmporal fields.
                         value = ''
                         unit = ''
                         
