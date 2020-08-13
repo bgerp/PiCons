@@ -1,11 +1,11 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
+"""
 
 MIT License
 
-Copyright (c) [2016] [POLYGON Team Ltd.]
+Copyright (c) [2020] [POLYGON Team Ltd.]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
+"""
 
-'''http://user:pass@ip.address/'''
-
-# http://ipaddress/?RelayOutputs=all&DigitalInputs=all&CounterInputs=all&AnalogInputs=all&ElectronicScales=all
+#region File Attributes
 
 ## Author of the file.
 __author__ = "Orlin Dimitrov"
 
 ## Copyrighter
 #  @see http://polygonteam.com/
-__copyright__ = "Copyright 2016, POLYGON Team Ltd."
+__copyright__ = "Copyright 2020, POLYGON Team Ltd."
 
 ## Credits
 __credits__ = ["Angel Boyarov"]
@@ -58,22 +56,60 @@ __email__ = "or.dimitrov@polygonteam.com"
 ## File status.
 __status__ = "Debug"
 
-## Measurement class
-#
-#  This class is dedicated contain units and value.
-class Measurement():
+#endregion
+
+class Measurement:
+    """This class is dedicated contain units and value."""
+
+    #region Attributes
+
     __value = None
+    """Value of the measurement."""
+
     __unit = None
-        
+    """Unit of the measurement."""
+
+    #endregion
+
+    @property
+    def value(self):
+        """Value of the measurement."""
+
+        return self.__value
+
+    @property
+    def unit(self):
+        """Units of the measurement."""
+
+        return self.__unit
+
+    @property
+    def is_valid(self):
+        """Is valid check procedure."""
+
+        return self.value is not None and self.unit is not None
+
+    #endregion
+
+    #region Constructor
+
     def __init__(self, value, unit):
+        """Constructor
+
+        Parameters
+        ----------
+        value : float
+            value of the measurement.
+        unit : str
+            Units
+        """
+
         self.__value = value
         self.__unit = unit
-        
-    def getValue(self):
-        return self.__value
-        
-    def getUnit(self):
-        return self.__unit
-        
-    def isValid(self):
-        return (self.__value != None and self.__unit != None)
+
+    def __str__(self):
+        return "Measurement; Value: {}; Unit: {}".format(self.value, self.unit)
+
+    __repr__ = __str__
+
+    #endregion
