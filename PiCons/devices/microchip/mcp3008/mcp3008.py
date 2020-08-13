@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-'''
+
+"""
 RPi_mcp3008 is a library to listen to the MCP3008 A/D converter chip,
 as described in the datasheet.
 https://www.adafruit.com/datasheets/MCP3008.pdf
@@ -19,7 +20,8 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+
+"""
 
 import spidev
 
@@ -45,12 +47,12 @@ DF7 = 7     # differential CH6 = IN- CH7 = IN+
 RESOLUTION = 1 << 10 # 10 bits resolution
 
 class MCP3008(spidev.SpiDev):
-    '''
+    """
     Object that listens the MCP3008 in the SPI port of the RPi.
     Connects the object to the specified SPI device.
     The initialization arguments are MCP3008(bus=0, device=0) where:
     MCP3008(X, Y) will open /dev/spidev-X.Y, same as spidev.SpiDev.open(X, Y).
-    '''
+    """
     def __init__(self, bus=0, device=0):
         self.bus = bus
         self.device = device
@@ -67,14 +69,14 @@ class MCP3008(spidev.SpiDev):
         self.close()
 
     def __repr__(self):
-        return 'MCP3008 object at bus {0}, device {1}'.format(self.bus, self.device)
+        return "MCP3008 object at bus {0}, device {1}".format(self.bus, self.device)
 
     def __call__(self, norm=False):
         return self.read(self.modes, norm)
 
     @classmethod
     def fixed(cls, modes, bus=0, device=0):
-        '''
+        """
         Initializes the class with fixed modes, which turns the instance callable.
         The modes argument is a list with the modes of operation to be read (e.g.
         [mcp3008.CH0,mcp3008.Df0]).
@@ -83,29 +85,29 @@ class MCP3008(spidev.SpiDev):
         When calling the instance, you can pass the optional argument norm to
         normalize
         the data (e.g. print instance(5.2)).
-        '''
+        """
         instance = cls(bus, device)
         instance.modes = modes
         return instance
 
     def _read_single(self, mode):
-        '''
+        """
         Returns the value of a single mode reading
-        '''
+        """
         if not 0 <= mode <= 15:
-            raise IndexError('Outside the channels scope, please use: 0, 1 ..., 7')
+            raise IndexError("Outside the channels scope, please use: 0, 1 ..., 7")
         request = [0x1, mode << 4, 0x0] # [start bit, configuration, listen space]
         _, byte1, byte2 = self.xfer2(request)
         value = (byte1%4 << 8) + byte2
         return value
 
     def read(self, modes, norm=False):
-        '''
+        """
         Returns the raw value (0 ... 1024) of the reading.
         The modes argument is a list with the modes of operation to be read (e.g.
         [mcp3008.CH0,mcp3008.Df0]).
         norm is a normalization factor, usually Vref.
-        '''
+        """
         reading = []
         for mode in modes:
             reading.append(self._read_single(mode))
@@ -115,11 +117,11 @@ class MCP3008(spidev.SpiDev):
             return reading
 
     def read_all(self, norm=False):
-        '''
+        """
         Returns a list with the readings of all the modes
         Data Order:
         [DF0, DF1, DF2, DF3, DF4, DF5, DF6, DF7,
          CH0, CH1, CH2, CH3, CH4, CH5, CH6, CH7]
         norm is a normalization factor, usually Vref.
-        '''
+        """
         return self.read(range(16), norm)

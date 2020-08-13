@@ -1,11 +1,11 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python3 
 # -*- coding: utf-8 -*-
 
-'''
+"""
 
 MIT License
 
-Copyright (c) [2016] [POLYGON Team Ltd.]
+Copyright (c) [2020] [POLYGON Team Ltd.]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
+"""
 
-'''http://user:pass@ip.address/'''
-
-# http://ipaddress/?RelayOutputs=all&DigitalInputs=all&CounterInputs=all&AnalogInputs=all&ElectronicScales=all
+#region File Attributes
 
 ## Author of the file.
 __author__ = "Orlin Dimitrov"
 
 ## Copyrighter
 #  @see http://polygonteam.com/
-__copyright__ = "Copyright 2016, POLYGON Team Ltd."
+__copyright__ = "Copyright 2020, POLYGON Team Ltd."
 
 ## Credits
 __credits__ = ["Angel Boyarov"]
@@ -58,6 +56,12 @@ __email__ = "or.dimitrov@polygonteam.com"
 ## File status.
 __status__ = "Debug"
 
+#endregion
+
+"""http://user:pass@ip.address/"""
+
+# http://ipaddress/?RelayOutputs=all&DigitalInputs=all&CounterInputs=all&AnalogInputs=all&ElectronicScales=all
+
 import time
 import threading
 from ElectronicScale import ElectronicScale
@@ -74,13 +78,13 @@ def es_worker():
         # Try to take mesurment.
         try:
             # Get mesurment.
-            mesurment = ElectronicScale.static_get_weight('COM6')
+            mesurment = ElectronicScale.static_get_weight("COM6")
             
             # Print not validated data.            
             if(mesurment.isValid()):
                 print mesurment.getValue(), mesurment.getUnit()
             else:
-                raise Exception('Invalid mesurment.', mesurment)
+                raise Exception("Invalid mesurment.", mesurment)
                 
         # Catch exception.
         except Exception as exception:
@@ -103,11 +107,11 @@ def main():
     while(True):
         # Keep alive.
         time.sleep(1)
-        print '--- Alive ---'
+        print "--- Alive ---"
         pass
     
 # Run the program.
-if(__name__ == '__main__'):
+if(__name__ == "__main__"):
 
     # Try to run main().
     try:
@@ -115,4 +119,4 @@ if(__name__ == '__main__'):
         
     except KeyboardInterrupt:
         time_stop = True
-        print('Shutting down the electronic scale.')
+        print("Shutting down the electronic scale.")
