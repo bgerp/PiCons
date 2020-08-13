@@ -1,11 +1,11 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
+"""
 
 MIT License
 
-Copyright (c) [2016] [POLYGON Team Ltd.]
+Copyright (c) [2020] [POLYGON Team Ltd.]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
+"""
 
+#region File Attributes
+
+## Author of the file.
 __author__ = "Orlin Dimitrov"
-__copyright__ = "Copyright 2016, POLYGON Team Ltd."
+
+## Copyrighter
+#  @see http://polygonteam.com/
+__copyright__ = "Copyright 2020, POLYGON Team Ltd."
+
+## Credits
 __credits__ = ["Angel Boyarov"]
+
+## License
+#  @see https://opensource.org/licenses/MIT
 __license__ = "MIT"
+
+# Version of the file.
 __version__ = "1.0.0"
+
+## Name of the author.
 __maintainer__ = "Orlin Dimitrov"
+
+## E-mail of the author.
+#  @see or.dimitrov@polygonteam.com
 __email__ = "or.dimitrov@polygonteam.com"
+
+## File status.
 __status__ = "Debug"
+
+#endregion

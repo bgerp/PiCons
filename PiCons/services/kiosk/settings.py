@@ -1,13 +1,11 @@
-
-
-#!/usr/bin/env python 
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
+"""
 
 MIT License
 
-Copyright (c) [2016] [POLYGON Team Ltd.]
+Copyright (c) [2020] [POLYGON Team Ltd.]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +25,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
+"""
+
+import os
+
+import ConfigParser
+
+#region File Attributes
 
 ## Author of the file.
 __author__ = "Orlin Dimitrov"
 
 ## Copyrighter
 #  @see http://polygonteam.com/
-__copyright__ = "Copyright 2016, POLYGON Team Ltd."
+__copyright__ = "Copyright 2020, POLYGON Team Ltd."
 
 ## Credits
 __credits__ = ["Angel Boyarov"]
@@ -56,28 +60,25 @@ __email__ = "or.dimitrov@polygonteam.com"
 ## File status.
 __status__ = "Debug"
 
-import os
-import ConfigParser
+#endregion
 
-## KioskSettings class
-#
-#  This class is dedicated to control the chromium browser.
-class KioskSettings():
+class KioskSettings:
+    """This class is dedicated to control the chromium browser."""
 
     ## Full path to the settings file.
-    __full_path = ''
+    __full_path = ""
     
     ## Configuration parser.
     __config = ConfigParser.ConfigParser()
     
     ## Command that invoke Chromium WEB browser in KIOSK mod.
-    __cb_command = '/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk '
+    __cb_command = "/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk "
     
     ## Desktop entry that describe the fields.
-    __desktop_entry = 'Desktop Entry'
+    __desktop_entry = "Desktop Entry"
     
     # ~/.config/autostart/autoChromium.desktop
-    '''
+    """
     [Desktop Entry]
     Type=Application
     Exec=/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk http://server2
@@ -86,17 +87,17 @@ class KioskSettings():
     Name[en_US]=AutoChromium
     Name=AutoChromium
     Comment=Start Chromium when GNOME starts
-    '''
+    """
 
     ## Constructor
     #  @param self The object pointer.
     #  @param full_path Full path to the settings file.
-    def __init__(self, full_path = ''):
+    def __init__(self, full_path = ""):
         # Check the serial port name.
         if(full_path == None):
-            raise ValueError('Must enter path.')
+            raise ValueError("Must enter path.")
         elif(os.path.exists(full_path) == False):
-            raise ValueError('Must enter file path.')
+            raise ValueError("Must enter file path.")
                 
         self.__full_path = full_path
         
@@ -112,15 +113,15 @@ class KioskSettings():
     #  @param self The object pointer.
     def create_default_settings(self):
         self.__config.add_section(self.__desktop_entry)
-        self.__config.set(self.__desktop_entry, 'Type', 'Application')
-        self.__config.set(self.__desktop_entry, 'Exec', self.__cb_command + 'http://polygonteam.com')
-        self.__config.set(self.__desktop_entry, 'Hidden', 'false')
-        self.__config.set(self.__desktop_entry, 'X-GNOME-Autostart-enabled', 'true')
-        self.__config.set(self.__desktop_entry, 'Name[en_US]', 'AutoChromium')
-        self.__config.set(self.__desktop_entry, 'Name', 'AutoChromium')
-        self.__config.set(self.__desktop_entry, 'Comment', 'Start Chromium when GNOME starts')
+        self.__config.set(self.__desktop_entry, "Type", "Application")
+        self.__config.set(self.__desktop_entry, "Exec", self.__cb_command + "http://polygonteam.com")
+        self.__config.set(self.__desktop_entry, "Hidden", "false")
+        self.__config.set(self.__desktop_entry, "X-GNOME-Autostart-enabled", "true")
+        self.__config.set(self.__desktop_entry, "Name[en_US]", "AutoChromium")
+        self.__config.set(self.__desktop_entry, "Name", "AutoChromium")
+        self.__config.set(self.__desktop_entry, "Comment", "Start Chromium when GNOME starts")
 
-        with open(self.__full_path, 'w') as configfile:\
+        with open(self.__full_path, "w") as configfile:\
             self.__config.write(configfile)
 
     ## Update browser address.
@@ -130,9 +131,9 @@ class KioskSettings():
     
         self.__config.read(self.__full_path)
     
-        self.__config.set(self.__desktop_entry, 'Exec', self.__cb_command + address)
+        self.__config.set(self.__desktop_entry, "Exec", self.__cb_command + address)
         
-        with open(self.__full_path, 'w') as configfile:\
+        with open(self.__full_path, "w") as configfile:\
             self.__config.write(configfile)
 
         # 1. Check if the browser is runing.
@@ -144,4 +145,4 @@ class KioskSettings():
     ## Stop kiosk browser.
     #  @param self The object pointer.
     def stop_browser(self):
-        print 'stop_browser'
+        print "stop_browser"
