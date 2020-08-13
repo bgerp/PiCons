@@ -1,22 +1,22 @@
 # Pi-Cons WEB based hardware IO controller
 
-The idea of this application is to help WEB based application to talk with industrial hardwar.
+The idea of this application is to help WEB based application to talk with industrial hardware.
 
-This application provides simply an HTTP server that ggenerates XML responses.
-The content of this responses is state of the digital inputs, digital outpust,
+This application provides simply an HTTP server that generates XML responses.
+The content of this responses is state of the digital inputs, digital outputs,
 pulsed outputs, analog inputs, electronic scales, etc.
 
-Ofcourse wia HTTP we can manipulate the outputs of the device.
+Of course wia HTTP we can manipulate the outputs of the device.
 
 Pi-Cons has LCD display that can displays WEB pages.
-This is verry usefull becaus we can create simple and same time
-beautifull user interface with dynamic forms and content.
+This is very useful becaus we can create simple and same time
+beautiful user interface with dynamic forms and content.
 
 ## Limitations
 
- - Application is opening only port 80. To change this you shoud change PORT_NUMBER in main.py.
- - Application can work only with 4 fixet GPIOs as outputs, 6 fixet GPIOs as inputs,
- 8 fixet analog inputs via MCP8003. The chip is connected via SPI0.
+ - Application is opening only port 80. To change this you should change PORT_NUMBER in main.py.
+ - Application can work only with 4 fixed GPIOs as outputs, 6 fixed GPIOs as inputs,
+ 8 fixed analog inputs via MCP8003. The chip is connected via SPI0.
 
 ## Compatible Hardware
 
