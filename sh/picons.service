@@ -1,0 +1,13 @@
+[Unit]
+Description=PiCons Runner Monitor
+After=network-online.target
+ 
+[Service]
+ExecStart=/bin/bash /opt/PiCons/sh/picons
+WorkingDirectory=/opt/PiCons/PiCons
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+ 
+[Install]
+WantedBy=multi-user.target
