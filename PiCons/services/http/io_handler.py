@@ -39,23 +39,6 @@ from devices.vedicom.vdi3060.vdi3060 import VDI3060
 
 from data.measurement import Measurement
 
-# wget -q -O - "http://admin:admin@127.0.1.1:8080/?RelayOutputs=all&DigitalInputs=all&CounterInputs=all&AnalogInputs=all&ElectronicScales=all"
-# wget -q -O - "http://127.0.1.1:8080/?RelayOutputs=all&DigitalInputs=all&CounterInputs=all&AnalogInputs=all&ElectronicScales=all"
-# wget -q -O - "http://127.0.1.1:8080?"
-
-# wget -q -O - "http://127.0.1.1:8080?RelayOutputs=all"
-# wget -q -O - "http://127.0.1.1:8080?Relay1=1&Relay2=1&Relay3=1&Relay4=1"
-# wget -q -O - "http://127.0.1.1:8080?Relay1=0&Relay2=0&Relay3=0&Relay4=0"
-
-# wget -q -O - "http://127.0.1.1:8080?DigitalInputs=all"
-
-# wget -q -O - "http://127.0.1.1:8080?CounterInputs=all"
-
-# wget -q -O - "http://127.0.1.1:8080?AnalogInputs=all"
-
-# wget -q -O - "http://127.0.1.1:8080?ElectronicScales=all"
-
-
 class IOHandler(RequestHandler):
     """Request Handler"""
 
@@ -73,47 +56,53 @@ class IOHandler(RequestHandler):
     __RELAY_4 = "Relay4"
     """Relay 4 command key. Value: 1 or 0"""
 
-    ## Toggle relay 1 command key. Value: 1
     __TOGGLE_RELAY_1 = "ToggleRelay1"
-    ## Toggle relay 2 command key. Value: 1
+    """Toggle relay 1 command key. Value: 1"""
+
     __TOGGLE_RELAY_2 = "ToggleRelay2"
-    ## Toggle relay 3 command key. Value: 1
+    """Toggle relay 2 command key. Value: 1"""
+
     __TOGGLE_RELAY_3 = "ToggleRelay3"
-    ## Toggle relay 4 command key. Value: 1
+    """Toggle relay 3 command key. Value: 1"""
+
     __TOGGLE_RELAY_4 = "ToggleRelay4"
+    """Toggle relay 4 command key. Value: 1"""
 
-    ## Pulse relay 4 command key. Value: 1 to 60[s]
     __PULSE_RELAY_1 = "PulseRelay1"
-    ## Pulse relay 4 command key. Value: 1 to 60[s]
+    """Pulse relay 1 command key. Value: 1 to 60[s]"""
+
     __PULSE_RELAY_2 = "PulseRelay2"
-    ## Pulse relay 4 command key. Value: 1 to 60[s]
+    """Pulse relay 2 command key. Value: 1 to 60[s]"""
+
     __PULSE_RELAY_3 = "PulseRelay3"
-    ## Pulse relay 4 command key. Value: 1 to 60[s]
+    """Pulse relay 3 command key. Value: 1 to 60[s]"""
+
     __PULSE_RELAY_4 = "PulseRelay4"
+    """Pulse relay 4 command key. Value: 1 to 60[s]"""
 
-    ## Address of the KIOSK browser in BASE64.
-    __KIOSK_ADDRESS = "KioskAddress"
-    ## Preset the default settings of the browser.
-    __KIOSK_DEFAULT = "KioskDefault"
+    __RO = {"key":"RelayOutputs", "unit":"LogicLevel", "identifier":{"1": "0", "2": "1", "3": "2", "4": "3"}}
+    """Relay outputs descriptor."""
 
-    ## Relay outputs descriptor.
-    __RO  = {"key" : "RelayOutputs",    "name" : "RelayOutput",     "unit" : "LogicLevel", "id" : {"1": "0", "2": "1", "3": "2", "4": "3"}}
-    ## Digital inputs descriptor.
-    __DI = {"key" : "DigitalInputs",    "name" : "DigitalInput",    "unit" : "LogicLevel", "id" : {"1": "4", "2": "5", "3": "6", "4": "7", "5": "8", "6": "9"}}
-    ## Counters inputs descriptor.
-    __CI = {"key" : "CounterInputs",    "name" : "CounterInput",    "unit" : "Count",      "id" : {"1": "10", "2": "11"}}
-    ## Analog inputs descriptor.
-    __AI = {"key" : "AnalogInputs",     "name" : "AnalogInput",     "unit" : "V",          "id" : {"1": "12", "2": "13", "3": "14", "4": "15", "5": "16", "6": "17", "7": "18", "8": "19"}}
-    ## Electronic scales descriptor.
-    __ES = {"key" : "ElectronicScales", "name" : "ElectronicScale",                        "id" : {"1": "20"}}
+    __DI = {"key":"DigitalInputs", "unit":"LogicLevel", "identifier":{"1": "4", "2": "5", "3": "6", "4": "7", "5": "8", "6": "9"}}
+    """Digital inputs descriptor."""
 
-    ## Protocol version.
+    __CI = {"key":"CounterInputs", "unit":"Count", "identifier":{"1":"10", "2":"11"}}
+    """Counters inputs descriptor."""
+
+    __AI = {"key":"AnalogInputs", "unit":"V", "identifier":{"1": "12", "2":"13", "3":"14", "4":"15", "5":"16", "6":"17", "7":"18", "8":"19"}}
+    """Analog inputs descriptor."""
+
+    __ES = {"key":"ElectronicScales", "name":"ElectronicScale", "identifier":{"1": "20"}}
+    """Electronic scales descriptor."""
+
     __PROTOCOL_VERSION = "16.11.0.1"
+    """Protocol version."""
 
-    ## Text representation of logic level 0.
     __STATE_LOW = "0"
-    ## Text representation of logic level 1.
+    """Text representation of logic level 0."""
+
     __STATE_HIGH = "1"
+    """Text representation of logic level 1."""
 
     __io_board = IOBoard()
     """IO board."""
@@ -127,6 +116,9 @@ class IOHandler(RequestHandler):
 
     def _do_page(self):
 
+        # Container.
+        container = dict()
+
         # Clear the entries.
         self.__entries.clear()
 
@@ -137,7 +129,7 @@ class IOHandler(RequestHandler):
         parsed_url = parse.urlparse(self.path)
 
         # Check is there arguments.
-        if self.__is_empty_query(parsed_url.query):
+        if parsed_url.query is not None and parsed_url.query != "":
 
             ucq_dict = parse.parse_qs(parsed_url.query)
             query_dict = dict([(str(key), str(value[0])) for key, value in ucq_dict.items()])
@@ -148,15 +140,13 @@ class IOHandler(RequestHandler):
             self.__do_ai(query_dict)
             self.__do_es(query_dict)
 
+
         # Create XML structure.
-        container = dict()
         container["ProtocolVersion"] = self._PROTOCOL_VERSION
         container["Device"] = self._settings.device_name
-        container["Entrys"] = self.__entries
+        container["Entries"] = self.__entries
 
         page_body = dicttoxml.dicttoxml(container, custom_root="Monitor", attr_type=False)
-
-        # print(page_body.decode("ascii"))
 
         return page_body
 
@@ -164,30 +154,14 @@ class IOHandler(RequestHandler):
 
 #region Private Methods
 
-    def __is_empty_query(self, query):
-        """Is empty query.
-
-        Parameters
-        ----------
-        query : str
-            Query object.
-
-        Returns
-        -------
-        bool
-            Is empty or not.
-        """
-
-        return query != None and query != ""
-
-    def __generate_entry(self, units, id, name, value):
+    def __generate_entry(self, units, identifier, name, value):
         """Generate entry.
 
         Parameters
         ----------
         units : str
             Units of the measurement in the entry.
-        id : int
+        identifier : int
             ID of the entry.
         name : str
             Name of the entry.
@@ -203,7 +177,7 @@ class IOHandler(RequestHandler):
         entry = dict()
 
         entry["Unit"] = units
-        entry["ID"] = id
+        entry["ID"] = identifier
         entry["Name"] = name
         entry["Value"] = value
 
@@ -317,19 +291,19 @@ class IOHandler(RequestHandler):
             # If the key is all then get all relay outputs.
             if indexes == "all":
 
-                for index in range(len(self.__RO["id"])):
+                for key, value in enumerate(self.__RO["identifier"]):
 
                     # Get ID of the entry item.
-                    id = self.__RO["id"][str(index + 1)]
+                    identifier = self.__RO["identifier"][str(key + 1)]
 
                     # Get value of the entry item.
-                    value = self.__STATE_HIGH if relay_outputs[index] else self.__STATE_LOW
+                    value = self.__STATE_HIGH if relay_outputs[key] else self.__STATE_LOW
 
-                    # Create nama of the entry item.
-                    name = self.__RO["name"] + str(index + 1)
+                    # Create name of the entry item.
+                    name = self._settings.ro_name(key + 1)
 
                     # Generate entry item.
-                    entry = self.__generate_entry(self.__RO["unit"], id, name, value)
+                    entry = self.__generate_entry(self.__RO["unit"], identifier, name, value)
 
                     # Add entry item to entries.
                     self.__entries.append(entry)
@@ -344,21 +318,21 @@ class IOHandler(RequestHandler):
                 indexes_spited = sorted(list(set(indexes_spited)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_spited)):
+                for key, value in enumerate(indexes_spited):
 
-                    if indexes_spited[index] in self.__RO["id"]:
+                    if indexes_spited[key] in self.__RO["identifier"]:
 
                         # Get ID of the entry item.
-                        id = self.__RO["id"][indexes_spited[index]]
+                        identifier = self.__RO["identifier"][indexes_spited[key]]
 
                         # Get value of the entry item.
-                        value = self.__STATE_HIGH if relay_outputs[index] else self.__STATE_LOW
+                        value = self.__STATE_HIGH if relay_outputs[key] else self.__STATE_LOW
 
                         # Create name of the entry item.
-                        name = self.__RO["name"] + indexes_spited[index]
+                        name = self._settings.ro_name(key + 1)
 
                         # Generate entry item.
-                        entry = self.__generate_entry(self.__RO["unit"], id, name, value)
+                        entry = self.__generate_entry(self.__RO["unit"], identifier, name, value)
 
                         # Add entry item to entries.
                         self.__entries.append(entry)
@@ -377,19 +351,19 @@ class IOHandler(RequestHandler):
             # If the key is all then get all relay inputs.
             if indexes == "all":
 
-                for index in range(len(self.__DI["id"])):
+                for key, value in enumerate(self.__DI["identifier"]):
 
                     # Get ID of the entry item.
-                    id = self.__DI["id"][str(index + 1)]
+                    identifier = self.__DI["identifier"][str(key + 1)]
 
                     # Get value of the entry item.
-                    value = self.__STATE_HIGH if digital_inputs[index] else self.__STATE_LOW
+                    value = self.__STATE_HIGH if digital_inputs[key] else self.__STATE_LOW
 
-                    # Create nama of the entry item.
-                    name = self.__DI["name"] + str(index + 1)
+                    # Create name of the entry item.
+                    name = self._settings.di_name(key + 1)
 
                     # Generate entry item.
-                    entry = self.__generate_entry(self.__DI["unit"], id, name, value)
+                    entry = self.__generate_entry(self.__DI["unit"], identifier, name, value)
 
                     # Add entry item to entries.
                     self.__entries.append(entry)
@@ -403,22 +377,22 @@ class IOHandler(RequestHandler):
                 # Remove dublicates and sort.
                 indexes_split = sorted(list(set(indexes_split)))
 
-
                 # If the length is grater then one.
-                for index in range(len(indexes_split)):
-                    if indexes_split[index] in self.__DI["id"]:
+                for key, value in enumerate(indexes_split):
+
+                    if indexes_split[key] in self.__DI["identifier"]:
 
                         # Get ID of the entry item.
-                        id = self.__DI["id"][indexes_split[index]]
+                        identifier = self.__DI["identifier"][indexes_split[key]]
 
                         # Get value of the entry item.
-                        value = self.__STATE_HIGH if digital_inputs[index] else self.__STATE_LOW
+                        value = self.__STATE_HIGH if digital_inputs[key] else self.__STATE_LOW
 
-                        # Create nama of the entry item.
-                        name = self.__DI["name"] + indexes_split[index]
+                        # Create name of the entry item.
+                        name = self._settings.di_name(key + 1)
 
                         # Generate entry item.
-                        entry = self.__generate_entry(self.__DI["unit"], id, name, value)
+                        entry = self.__generate_entry(self.__DI["unit"], identifier, name, value)
 
                         # Add entry item to entries.
                         self.__entries.append(entry)
@@ -451,19 +425,19 @@ class IOHandler(RequestHandler):
             # If the key is all then get all counters_inputs.
             if indexes == "all":
 
-                for index in range(len(self.__CI["id"])):
+                for key, value in enumerate(self.__CI["identifier"]):
 
                     # Get ID of the entry item.
-                    id = self.__CI["id"][str(index + 1)]
+                    identifier = self.__CI["identifier"][str(key + 1)]
 
                     # Get value of the entry item.
-                    value = counters_inputs[index]
+                    value = counters_inputs[key]
 
                     # Create name of the entry item.
-                    name = self.__CI["name"] + str(index + 1)
+                    name = self._settings.ci_name(key + 1)
 
                     # Generate entry item.
-                    entry = self.__generate_entry(self.__CI["unit"], id, name, value)
+                    entry = self.__generate_entry(self.__CI["unit"], identifier, name, value)
 
                     # Add entry item to entries.
                     self.__entries.append(entry)
@@ -478,21 +452,21 @@ class IOHandler(RequestHandler):
                 indexes_split = sorted(list(set(indexes_split)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_split)):
+                for key, value in enumerate(indexes_split):
 
-                    if indexes_split[index] in self.__CI["id"]:
+                    if indexes_split[key] in self.__CI["identifier"]:
 
                         # Get ID of the entry item.
-                        id = self.__CI["id"][indexes_split[index]]
+                        identifier = self.__CI["identifier"][indexes_split[key]]
 
                         # Get value of the entry item.
-                        value = counters_inputs[index]
+                        value = counters_inputs[key]
 
                         # Create name of the entry item.
-                        name = self.__CI["name"] + indexes_split[index]
+                        name = self._settings.ci_name(key + 1)
 
                         # Generate entry item.
-                        entry = self.__generate_entry(self.__CI["unit"], id, name, value)
+                        entry = self.__generate_entry(self.__CI["unit"], identifier, name, value)
 
                         # Add entry item to entries.
                         self.__entries.append(entry)
@@ -510,19 +484,19 @@ class IOHandler(RequestHandler):
 
             # If the key is all then get all relay analog inputs.
             if indexes == "all":
-                for index in range(len(self.__AI["id"])):
+                for key, value in enumerate(self.__AI["identifier"]):
 
                     # Get ID of the entry item.
-                    id = self.__AI["id"][str(index + 1)]
+                    identifier = self.__AI["identifier"][str(key + 1)]
 
                     # Get value of the entry item.
-                    value = analog_inputs[index]
+                    value = analog_inputs[key]
 
-                    # Create nama of the entry item.
-                    name = self.__AI["name"] + str(index + 1)
+                    # Create name of the entry item.
+                    name = self._settings.ai_name(key + 1)
 
                     # Generate entry item.
-                    entry = self.__generate_entry(self.__AI["unit"], id, name, value)
+                    entry = self.__generate_entry(self.__AI["unit"], identifier, name, value)
 
                     # Add entry item to entries.
                     self.__entries.append(entry)
@@ -537,20 +511,21 @@ class IOHandler(RequestHandler):
                 indexes_split = list(set(indexes_split))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_split)):
-                    if indexes_split[index] in self.__AI["id"]:
+                for key, value in enumerate(indexes_split):
+
+                    if indexes_split[key] in self.__AI["identifier"]:
 
                         # Get ID of the entry item.
-                        id = self.__AI["id"][indexes_split[index]]
+                        identifier = self.__AI["identifier"][indexes_split[key]]
 
                         # Get value of the entry item.
-                        value = analog_inputs[index]
+                        value = analog_inputs[key]
 
-                        # Create nama of the entry item.
-                        name = self.__AI["name"] + str(index + 1)
+                        # Create name of the entry item.
+                        name = self._settings.ai_name(key + 1)
 
                         # Generate entry item.
-                        entry = self.__generate_entry(self.__AI["unit"], id, name, value)
+                        entry = self.__generate_entry(self.__AI["unit"], identifier, name, value)
 
                         # Add entry item to entries.
                         self.__entries.append(entry)
@@ -575,10 +550,6 @@ class IOHandler(RequestHandler):
 
                 print("Electronic scale exception: {}".format(error_text))
                 # TODO: Log the error for a week.
-                #print type(exception)     # the exception instance
-                #print exception.args[0]      # arguments stored in .args
-                #print exception           # __str__ allows args to be printed directly
-                pass
 
             # Data container.
             es_inputs = []
@@ -586,12 +557,12 @@ class IOHandler(RequestHandler):
 
             # If the key is all then get all electronic scales.
             if indexes == "all":
-                for index in range(len(self.__ES["id"])):
+                for index in range(len(self.__ES["identifier"])):
 
                     # Get ID of the entry item.
-                    id = self.__ES["id"][str(index + 1)]
+                    identifier = self.__ES["identifier"][str(index + 1)]
 
-                    # Create nama of the entry item.
+                    # Create name of the entry item.
                     name = self.__ES["name"] + str(index + 1)
 
                     # Temporal fields.
@@ -599,13 +570,13 @@ class IOHandler(RequestHandler):
                     unit = ""
 
                     # Get value of the entry item.
-                    if es_inputs[index] != None:
+                    if es_inputs[index] is not None:
                         if es_inputs[index].is_valid:
                             value = es_inputs[index].value
                             unit = es_inputs[index].unit
 
                     # Generate entry item.
-                    es_entry = self.__generate_entry(unit, id, name, value)
+                    es_entry = self.__generate_entry(unit, identifier, name, value)
 
                     # Add entry item to entries.
                     self.__entries.append(es_entry)
@@ -620,26 +591,26 @@ class IOHandler(RequestHandler):
                 indexes_split = sorted(list(set(indexes_split)))
 
                 # If the length is grater then one.
-                for index in range(len(indexes_split)):
-                    if indexes_split[index] in self.__ES["id"]:
+                for key, value in enumerate(indexes_split):
+                    if indexes_split[key] in self.__ES["identifier"]:
 
                         # Get ID of the entry item.
-                        id = self.__ES["id"][indexes_split[index]]
+                        identifier = self.__ES["identifier"][indexes_split[key]]
 
-                        # Create nama of the entry item.
-                        name = self.__ES["name"] + indexes_split[index]
+                        # Create name of the entry item.
+                        name = self.__ES["name"] + indexes_split[key]
 
                         # Temporal fields.
                         value = ""
                         unit = ""
 
                         # Get value of the entry item.
-                        if es_inputs[index] != None and es_inputs[index].isValid():
-                            value = es_inputs[index].getValue()
-                            unit = es_inputs[index].getUnit()
+                        if es_inputs[key] is not None and es_inputs[key].is_valid:
+                            value = es_inputs[key].value
+                            unit = es_inputs[key].unit
 
                         # Generate entry item.
-                        es_entry = self.__generate_entry(unit, id, name, value)
+                        es_entry = self.__generate_entry(unit, identifier, name, value)
 
                         # Add entry item to entries.
                         self.__entries.append(es_entry)
