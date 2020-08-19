@@ -27,7 +27,7 @@ SOFTWARE.
 
 """
 
-from threading import Thread 
+from threading import Thread
 
 from http.server import HTTPServer
 
@@ -67,6 +67,7 @@ __status__ = "Debug"
 #endregion
 
 class Server:
+    """WEB server self service hosting"""
 
 #region Attributes
 
@@ -119,6 +120,12 @@ class Server:
 #region Private Methods
 
     def __worker(self, args):
+
+        if self.__server is not None:
+            del self.__server
+
+        self.__server = None
+        self.__server = HTTPServer((self.__host, self.__port), IOHandler)
         self.__server.serve_forever()
 
 #endregion
@@ -126,24 +133,26 @@ class Server:
 #region Public Methods
 
     def start(self):
+        """Start the server."""
+
         # Create two threads as follows
         try:
             if self.__thread is None:
 
                 # Create
                 self.__thread = Thread(target=self.__worker, args=(33,))
-                self.__server = HTTPServer((self.__host, self.__port), IOHandler)
 
                 # Start if not.
                 if not self.__thread.is_alive():
                     self.__thread.start()
 
-                    self.__logger.info("Start WEB service.")
+                    self.__logger.info("Service started @ http://{}:{}".format(self.__host, self.__port))
 
-        except Exception as e:
-            self.__logger.error(e)
+        except Exception as exception:
+            self.__logger.error(exception)
 
     def stop(self):
+        """Stop the server."""
 
         try:
             if self.__thread is not None:
@@ -166,7 +175,7 @@ class Server:
 
                     self.__logger.info("Stop WEB service.")
 
-        except Exception as e:
-            self.__logger.error(e)
+        except Exception as exception:
+            self.__logger.error(exception)
 
 #endregion
