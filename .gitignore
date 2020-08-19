@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,python
+# Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -150,4 +150,9 @@ dmypy.json
 # Ignore all local history of files
 .history
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python
+### Settings
+# Ignore settings file.
+settings.ini
+./Picons/settings.ini
+
+# End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
