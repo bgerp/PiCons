@@ -27,8 +27,9 @@ SOFTWARE.
 
 """
 
-import socket
 import signal
+import socket
+import time
 
 from utils.logger import get_logger, crate_log_file
 from utils.settings import AppSettings
@@ -109,6 +110,12 @@ def main():
     __logger = get_logger(__name__)
 
     __setting = AppSettings.get_instance()
+    while not __setting.exists:
+        __logger.info("Settings not exists.")
+        __setting.enable_write = True
+        __setting.create_default()
+        __setting.enable_write = False
+        time.sleep(1)
 
     __logger.info("Application started for device: {}".format(__setting.device_name))
 
@@ -121,7 +128,6 @@ def main():
     ip_address = socket.gethostbyname(socket.gethostname())
     __server = Server(ip_address, __setting.server_port)
     __server.start()
-    __logger.info("Service started @ http://{}:{}".format(ip_address, __setting.server_port))
 
     # Hold the runtime.
     print("Starting server, use <Ctrl-C> to stop")
