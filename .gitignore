@@ -153,6 +153,6 @@ dmypy.json
 ### Settings
 # Ignore settings file.
 settings.ini
-./Picons/settings.ini
+PiCons\settings.ini
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
