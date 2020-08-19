@@ -32,6 +32,8 @@ import time
 import configparser
 import base64
 
+from utils.logger import get_logger
+
 #region File Attributes
 
 __author__ = "Orlin Dimitrov"
@@ -68,10 +70,13 @@ class AppSettings:
 
     #region Attributes
 
+    __logger = None
+    """Logger"""
+
     __instance = None
     """Instance of the class."""
 
-    __full_path = "settings.ini"
+    __file_name = "settings.ini"
     """Full path to the settings file."""
 
     __config = configparser.ConfigParser()
@@ -83,6 +88,18 @@ class AppSettings:
     #endregion
 
     #region Properties
+
+    @property
+    def exists(self):
+        """Does the the settings file exists.
+
+        Returns
+        -------
+        bool
+            File exists.
+        """
+
+        return os.path.exists(self.__file_name)
 
     @property
     def device_name(self):
@@ -131,89 +148,134 @@ class AppSettings:
         base64_message = base64_bytes.decode('ascii')
         return base64_message
 
+    @property
+    def enable_write(self):
+        """Enable write in file.
+
+        Returns
+        -------
+        bool
+            enable write in file flag.
+        """
+
+        return self.__enable_write_in_file
+
+    @enable_write.setter
+    def enable_write(self, value):
+        """Enable write in file."""
+
+        self.__enable_write_in_file = value
+
     #endregion
 
     #region Constructor / Destructor
 
-    def __init__(self, full_path="settings.ini"):
-        """Constructor"""
+    def __init__(self, file_name=None):
+        """Constructor
 
-        # Check the serial port name.
-        if full_path == None:
-            raise ValueError("Must enter path.")
+        Parameters
+        ----------
+        file_name : str
+            File name.
+        """
 
-        if os.path.exists(full_path) == False:
-            raise ValueError("Must enter file path.")
+        if file_name is None:
+            cwd = os.getcwd()
+            self.__file_name = os.path.join(cwd, "settings.ini")
 
-        self.__full_path = full_path
+        else:
+            self.__file_name = file_name
 
-        self.__config.read(self.__full_path)
+        # Read setting.
+        self.read()
+
+        # Create logger.
+        self.__logger = get_logger(__name__)
 
     def __del__(self):
         """Destructor"""
 
-        # Update file.
-        if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
-                self.__config.write(configfile)
+        self.save()
 
     #endregion
 
-    ## Create default settings.
-    #  @param self The object pointer.
-    def create_settings(self):
+    #region Public Methods
 
-        self.__config.add_section("CREDENTIALS")
-        self.__config.set("CREDENTIALS", "user", "admin")
-        self.__config.set("CREDENTIALS", "pass", "admin")
-        #self.__config.set("CREDENTIALS", "server", "127.0.0.1")
+    def read(self):
+        """Read YAML file."""
 
-        #self.__config.add_section("OUTPUTS")
-        #self.__config.set("OUTPUTS", "Relay1Description", "Relay 1")
-        #self.__config.set("OUTPUTS", "Relay2Description", "Relay 2")
-        #self.__config.set("OUTPUTS", "Relay3Description", "Relay 3")
-        #self.__config.set("OUTPUTS", "Relay4Description", "Relay 4")
+        if self.exists:
 
-        #self.__config.add_section("INPUTS")
-        #self.__config.set("INPUTS", "DigitalInput1Description", "Digital In1")
-        #self.__config.set("INPUTS", "DigitalInput2Description", "Digita2 In2")
-        #self.__config.set("INPUTS", "DigitalInput3Description", "Digita3 In3")
-        #self.__config.set("INPUTS", "DigitalInput4Description", "Digita4 In4")
-        #self.__config.set("INPUTS", "DigitalInput5Description", "Digita5 In5")
-        #self.__config.set("INPUTS", "DigitalInput6Description", "Digita6 In6")
+            self.__config.read(self.__file_name)
 
-        #self.__config.add_section("ANALOGS")
-        #self.__config.set("ANALOGS", "AnalogInput1Description", "Analog Inp1")
-        #self.__config.set("ANALOGS", "AnalogInput2Description", "Analog Inp2")
-        #self.__config.set("ANALOGS", "AnalogInput3Description", "Analog Inp3")
-        #self.__config.set("ANALOGS", "AnalogInput4Description", "Analog Inp4")
-        #self.__config.set("ANALOGS", "AnalogInput5Description", "Analog Inp5")
-        #self.__config.set("ANALOGS", "AnalogInput6Description", "Analog Inp6")
-        #self.__config.set("ANALOGS", "AnalogInput7Description", "Analog Inp7")
-        #self.__config.set("ANALOGS", "AnalogInput8Description", "Analog Inp8")
+    def save(self):
+        """Save to file."""
 
-        self.__config.add_section("COUNTERS")
-        #self.__config.set("COUNTERS", "CounterInput1Description", "Counterl In1")
-        #self.__config.set("COUNTERS", "CounterInput2Description", "Counterl In2")
-        self.__config.set("COUNTERS", "CounterInput1", "0")
-        self.__config.set("COUNTERS", "CounterInput2", "0")
-
-        self.__config.add_section("DEVICE")
-        self.__config.set("DEVICE", "Name", "D19")
-
-        # Update file.
         if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
+
+            with open(self.__file_name, "w") as configfile:
                 self.__config.write(configfile)
 
-        # Read file.
-        self.__config.read(self.__full_path)
+    def create_default(self):
+        """Create default settings."""
 
-    ## Update credentials.
-    #  @param self The object pointer.
-    #  @param user Username for this device.
-    #  @param password Password for this device.
+        if not "SERVER" in self.__config.sections():
+            self.__config.add_section("SERVER")
+        self.__config.set("SERVER", "port", "8080")
+
+        if not "DEVICE" in self.__config.sections():
+            self.__config.add_section("DEVICE")
+        self.__config.set("DEVICE", "name", "None")
+
+        if not "CREDENTIALS" in self.__config.sections():
+            self.__config.add_section("CREDENTIALS")
+        self.__config.set("CREDENTIALS", "user", "admin")
+        self.__config.set("CREDENTIALS", "pass", "admin")
+
+        if not "RO" in self.__config.sections():
+            self.__config.add_section("RO")
+        self.__config.set("RO", "RODescription1", "Relay 1")
+        self.__config.set("RO", "RODescription2", "Relay 2")
+        self.__config.set("RO", "RODescription3", "Relay 3")
+        self.__config.set("RO", "RODescription4", "Relay 4")
+
+        if not "DI" in self.__config.sections():
+            self.__config.add_section("DI")
+        self.__config.set("DI", "DIDescription1", "Digital In 1")
+        self.__config.set("DI", "DIDescription2", "Digital In 2")
+        self.__config.set("DI", "DIDescription3", "Digital In 3")
+        self.__config.set("DI", "DIDescription4", "Digital In 4")
+        self.__config.set("DI", "DIDescription5", "Digital In 5")
+        self.__config.set("DI", "DIDescription6", "Digital In 6")
+
+        if not "CI" in self.__config.sections():
+            self.__config.add_section("CI")
+        self.__config.set("CI", "CIDescription1", "Counter In 1")
+        self.__config.set("CI", "CIDescription2", "Counter In 2")
+        self.__config.set("CI", "CIValue1", "0")
+        self.__config.set("CI", "CIValue2", "0")
+
+        if not "AI" in self.__config.sections():
+            self.__config.add_section("AI")
+        self.__config.set("AI", "AIDescription1", "Analog In 1")
+        self.__config.set("AI", "AIDescription2", "Analog In 2")
+        self.__config.set("AI", "AIDescription3", "Analog In 3")
+        self.__config.set("AI", "AIDescription4", "Analog In 4")
+        self.__config.set("AI", "AIDescription5", "Analog In 5")
+        self.__config.set("AI", "AIDescription6", "Analog In 6")
+        self.__config.set("AI", "AIDescription7", "Analog In 7")
+        self.__config.set("AI", "AIDescription8", "Analog In 8")
+
+        # Save to file.
+        self.save()
+
+        # read file.
+        self.read()
+
+        self.__logger.warning("New settings file has been created.")
+
     def update_credentials(self, user, password):
+        """Update credentials."""
 
         if user != None:
             self.__config.set("CREDENTIALS", "user", user)
@@ -221,67 +283,77 @@ class AppSettings:
         if user != None:
             self.__config.set("CREDENTIALS", "pass", password)
 
-        if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
-                self.__config.write(configfile)
+        self.save()
 
-    ## Update counters values.
-    #  @param self The object pointer.
-    #  @param cnt1 Counter 1 value.
-    #  @param cnt2 Counter 2 value.
     def update_counters(self, cnt1, cnt2):
+        """Update counters values."""
+
         if cnt1 > 0:
-            tmp_cnt1 = self.__config.get("COUNTERS", "CounterInput1", cnt1)
-            self.__config.set("COUNTERS", "CounterInput1", tmp_cnt1 + cnt1)
+            tmp_cnt1 = self.__config.get("CI", "CIValue1", cnt1)
+            self.__config.set("CI", "CIValue1", tmp_cnt1 + cnt1)
 
         if cnt2 > 0:
-            self.__config.set("COUNTERS", "CounterInput2", cnt2)
+            self.__config.set("CI", "CIValue2", cnt2)
 
-        if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
-                self.__config.write(configfile)
+        self.save()
 
-    ## Add counters values.
-    #  @param self The object pointer.
-    #  @param cnt1 Counter 1 value.
-    #  @param cnt2 Counter 2 value.
     def add_counters(self, cnt1, cnt2):
+        """Add counters values."""
+
         if cnt1 > 0:
-            tmp_cnt1 = self.__config.get("COUNTERS", "CounterInput1")
-            self.__config.set("COUNTERS", "CounterInput1", int(tmp_cnt1) + cnt1)
+            tmp_cnt1 = self.__config.get("CI", "CIValue1")
+            self.__config.set("CI", "CIValue1", int(tmp_cnt1) + cnt1)
 
         if cnt2 > 0:
-            tmp_cnt2 = self.__config.get("COUNTERS", "CounterInput2")
-            self.__config.set("COUNTERS", "CounterInput2", int(tmp_cnt2) + cnt2)
+            tmp_cnt2 = self.__config.get("CI", "CIValue2")
+            self.__config.set("CI", "CIValue2", int(tmp_cnt2) + cnt2)
 
-        if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
-                self.__config.write(configfile)
+        self.save()
 
-    ## Returns counters values.
-    #  @param self The object pointer.
-    #  @return Returns arrray of counters values. (cnt1, cnt2)
     def get_counters(self):
-        cnt1 = self.__config.get("COUNTERS", "CounterInput1")
-        cnt2 = self.__config.get("COUNTERS", "CounterInput2")
+        """Returns counters values."""
+
+        cnt1 = self.__config.get("CI", "CIValue1")
+        cnt2 = self.__config.get("CI", "CIValue2")
+
         return (cnt1, cnt2)
 
-    ## Update counters values.
-    #  @param self The object pointer.
-    #  @param cnt1 Counter 1 value. It hase default value of 0.
-    #  @param cnt2 Counter 2 value. It hase default value of 0.
     def reset_counters(self, cnt1=0, cnt2=0):
-        self.__config.set("COUNTERS", "CounterInput1", cnt1)
-        self.__config.set("COUNTERS", "CounterInput2", cnt2)
+        """Update counters values."""
 
-        if self.__enable_write_in_file:
-            with open(self.__full_path, "w") as configfile:\
-                self.__config.write(configfile)
+        self.__config.set("CI", "CIValue1", cnt1)
+        self.__config.set("CI", "CIValue2", cnt2)
+
+        self.save()
+
+    def ro_name(self, index):
+        """Relay outputs name."""
+
+        key = "rodescription" + str(index)
+        return self.__config["RO"][key]
+
+    def di_name(self, index):
+        """Digitasl input name."""
+
+        key = "didescription" + str(index)
+        return self.__config["DI"][key]
+
+    def ci_name(self, index):
+        """Counter input name."""
+
+        key = "cidescription" + str(index)
+        return self.__config["CI"][key]
+
+    def ai_name(self, index):
+        """Analog input name."""
+
+        key = "aidescription" + str(index)
+        return self.__config["AI"][key]
 
 #region Static Methods
 
     @staticmethod
-    def get_instance(file_path="settings.ini"):
+    def get_instance(file_path=None):
         """Singelton instance."""
 
         if AppSettings.__instance is None:
