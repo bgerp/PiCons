@@ -31,6 +31,8 @@ import socket
 import signal
 
 from utils.logger import get_logger, crate_log_file
+from utils.settings import AppSettings
+from utils.utils import get_local_ip
 
 from services.http.server import Server
 
@@ -65,6 +67,8 @@ __status__ = "Debug"
 
 #endregion
 
+#region Variables
+
 __server = None
 """Server"""
 
@@ -73,6 +77,8 @@ __time_to_stop = False
 
 __logger = None
 """Logger"""
+
+#endregion
 
 def interupt_handler(signum, frame):
     """Interupt handler."""
@@ -102,16 +108,23 @@ def main():
     crate_log_file()
     __logger = get_logger(__name__)
 
+    __setting = AppSettings.get_instance()
+
+    __logger.info("Application started for device: {}".format(__setting.device_name))
+
     # Add signal handler.
     signal.signal(signal.SIGINT, interupt_handler)
     signal.signal(signal.SIGTERM, interupt_handler)
 
+    # Run the WEB service.
+    # ip_address = get_local_ip()
     ip_address = socket.gethostbyname(socket.gethostname())
-    __server = Server(ip_address, 8080)
+    __server = Server(ip_address, __setting.server_port)
     __server.start()
+    __logger.info("Service started @ http://{}:{}".format(ip_address, __setting.server_port))
 
+    # Hold the runtime.
     print("Starting server, use <Ctrl-C> to stop")
-
     while not __time_to_stop:
         pass
 

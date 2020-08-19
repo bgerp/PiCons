@@ -30,12 +30,15 @@ SOFTWARE.
 import time
 import threading
 
-# RPi_mcp3008 is a library to listen to the MCP3008 A/D converter chip with a RPi.
-from devices.microchip.mcp3008.mcp3008 import MCP3008
-
 # GPIO boar control.
 # @see http://makezine.com/projects/tutorial-raspberry-pi-gpio-pins-and-python/
 import RPi.GPIO as GPIO
+
+# RPi_mcp3008 is a library to listen to the MCP3008 A/D converter chip with a RPi.
+from devices.microchip.mcp3008.mcp3008 import MCP3008
+
+from utils.logger import get_logger
+
 
 #region File Attributes
 
@@ -72,6 +75,9 @@ class IOBoard():
     """This class is dedicated to drive IO pins of the Raspberry PI 2/3/4."""
 
     #region Attributes
+
+    __logger = None
+    """"Logger"""
 
     __output_pins = [18, 17, 27, 23]
     """
@@ -115,9 +121,6 @@ class IOBoard():
         @see https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
     """
 
-    __adc_values = []
-    """ADC Values."""
-
     __debounce_flags = [True, True]
     """Software debounce flags."""
 
@@ -130,6 +133,8 @@ class IOBoard():
 
     def __init__(self):
         """Constructor"""
+
+        self.__logger = get_logger(__name__)
 
         # Set the board.
         GPIO.setmode(GPIO.BCM)
@@ -145,7 +150,8 @@ class IOBoard():
             GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         # Initialize the timers.
-        for index in enumerate(self.__counters_values):
+        size = len(self.__counters_values)
+        for index in range(size):
             self.init_counter(index)
 
         self.__adc = MCP3008()
@@ -305,7 +311,7 @@ class IOBoard():
         int
             Counter value.
         """
-
+        
         return self.__counters_values[index]
 
     def get_counters(self):
@@ -342,29 +348,32 @@ class IOBoard():
         if(index > 7 or index < 0):
             return 0.0
 
-        # Return data from ADC.
         value = self.__adc.read([self.__analog_inputs_map[index]])[0]
-        value = float(value)
+
         value = self.__from0to10(value)
+        value = float("{:.3f}".format(value))
 
-        self.__adc_values[index] = value
-
-        return self.__adc_values[index]
+        # Return data from ADC.
+        return value
 
     def get_analogs(self):
         """Returns analogs inputs values.
 
         Returns
         -------
-        []
+        list
             Analog chanels values. (a0 ... a7)
         """
 
+        # All inputs data.
+        adc_values = []
+
+        # Get all inputs.
         for index in range(8):
-            self.get_analog(index)
+            adc_values.append(self.get_analog(index))
 
         # Return data from ADC.
-        return self.__adc_values
+        return adc_values
 
 
     def timed_output_set(self, index, pulse_time):

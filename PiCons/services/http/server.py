@@ -31,7 +31,7 @@ from threading import Thread
 
 from http.server import HTTPServer
 
-from services.http.request_handler import RequestHandler
+from services.http.io_handler import IOHandler
 
 from utils.logger import get_logger
 
@@ -132,7 +132,7 @@ class Server:
 
                 # Create
                 self.__thread = Thread(target=self.__worker, args=(33,))
-                self.__server = HTTPServer((self.__host, self.__port), RequestHandler)
+                self.__server = HTTPServer((self.__host, self.__port), IOHandler)
 
                 # Start if not.
                 if not self.__thread.is_alive():

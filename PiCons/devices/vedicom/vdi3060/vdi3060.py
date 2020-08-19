@@ -218,7 +218,7 @@ class VDI3060:
         if self.__serial_port.isOpen():
             self.__serial_port.close()
 
-    def get_weight(self):
+    def weight(self):
         """Get the weight of the object on top of the scale."""
 
         # Response data.
@@ -236,12 +236,12 @@ class VDI3060:
     #region Public Static Methods
 
     @staticmethod
-    def static_get_weight(port_name):
+    def get_weight(port_name):
         """Get the weight without instancing the class."""
 
         e_scale = VDI3060(port_name)
         e_scale.connect()
-        weight = e_scale.get_weight()
+        weight = e_scale.weight()
         del e_scale
 
         return weight
