@@ -27,8 +27,8 @@ SOFTWARE.
 
 """
 
-import time
 import os
+import socket
 
 #region File Attributes
 
@@ -61,9 +61,20 @@ __status__ = "Debug"
 
 #endregion
 
-    ## Return CPU temperature as a character string
-    #  @return CPU temperature.
-    @staticmethod
-    def get_cpu_temperature():
-        res = os.popen("vcgencmd measure_temp").readline()
-        return(float(res.replace("temp=","").replace(""C\n","")))
+def get_cpu_temperature():
+    """Return CPU temperature as a character string."""
+
+    res = os.popen("vcgencmd measure_temp").readline()
+    res = res.replace("temp=","").replace("C\n","")
+    res = float(res)
+    return res
+
+def get_local_ip():
+    """Returns the local IP address of the machine."""
+
+    ip = [l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] 
+    if not ip.startswith("127.")][:1], [[(s.connect(('8.8.8.8', 53)), 
+    s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, 
+    socket.SOCK_DGRAM)]][0][1]]) if l][0][0]
+
+    return ip
