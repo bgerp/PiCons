@@ -157,6 +157,48 @@ class IOHandler(RequestHandler):
 
 #region Private Methods
 
+    def __turn_relay(self, key, state):
+        """Turn ON/OFF the relay."""
+
+        if state == self.__STATE_LOW:
+            self.__io_board.set_output(key, False)
+        if state == self.__STATE_HIGH:
+            self.__io_board.set_output(key, True)
+
+        return_state = self.__io_board.get_output(key)
+
+        identifier = self.__RO["identifier"][str(key + 1)]
+        value = self.__STATE_HIGH if return_state else self.__STATE_LOW
+        name = self._settings.ro_name(key + 1)
+
+        entry = self.__generate_entry(self.__RO["unit"], identifier, name, value)
+
+        self.__entries.append(entry)
+
+    def __toggle_relay(self, key, state):
+
+        if state == self.__STATE_HIGH:
+            state = not self.__io_board.get_output(key)
+            self.__io_board.set_output(key, state)
+
+        return_state = self.__io_board.get_output(key)
+
+        identifier = self.__RO["identifier"][str(key + 1)]
+        value = self.__STATE_HIGH if return_state else self.__STATE_LOW
+        name = self._settings.ro_name(key + 1)
+
+        entry = self.__generate_entry(self.__RO["unit"], identifier, name, value)
+
+        self.__entries.append(entry)
+
+    def __pulse_relay(self, key, str_time):
+
+        try:
+            flt_time = float(str_time)
+            self.__io_board.timed_output_set(key, flt_time)
+        except:
+            pass
+
     def __generate_entry(self, units, identifier, name, value):
         """Generate entry.
 
@@ -190,99 +232,75 @@ class IOHandler(RequestHandler):
 
         # If relay 1 is in the arguments parse it.
         if self.__RELAY_1 in query_dict:
+
             state = query_dict[self.__RELAY_1]
-            if state == "0":
-                self.__io_board.set_output(0, False)
-            if state == "1":
-                self.__io_board.set_output(0, True)
+            self.__turn_relay(0, state)
 
         # If relay 2 is in the arguments parse it.
         if self.__RELAY_2 in query_dict:
+
             state = query_dict[self.__RELAY_2]
-            if state == "0":
-                self.__io_board.set_output(1, False)
-            if state == "1":
-                self.__io_board.set_output(1, True)
+            self.__turn_relay(1, state)
 
         # If relay 3 is in the arguments parse it.
         if self.__RELAY_3 in query_dict:
+
             state = query_dict[self.__RELAY_3]
-            if state == "0":
-                self.__io_board.set_output(2, False)
-            if state == "1":
-                self.__io_board.set_output(2, True)
+            self.__turn_relay(2, state)
 
         # If relay 4 is in the arguments parse it.
         if self.__RELAY_4 in query_dict:
+
             state = query_dict[self.__RELAY_4]
-            if state == "0":
-                self.__io_board.set_output(3, False)
-            if state == "1":
-                self.__io_board.set_output(3, True)
+            self.__turn_relay(3, state)
 
         # If toggle relay 1 is in the arguments parse it.
         if self.__TOGGLE_RELAY_1 in query_dict:
+
             state = str(query_dict[self.__TOGGLE_RELAY_1][0])
-            if state == "1":
-                state = not self.__io_board.get_output(0)
-                self.__io_board.set_output(0, state)
+            self.__toggle_relay(0, state)
 
         # If toggle relay 2 is in the arguments parse it.
         if self.__TOGGLE_RELAY_2 in query_dict:
-            state = query_dict[self.__TOGGLE_RELAY_2]
-            if state == "1":
-                state = not self.__io_board.get_output(1)
-                self.__io_board.set_output(1, state)
+
+            state = str(query_dict[self.__TOGGLE_RELAY_2][0])
+            self.__toggle_relay(1, state)
 
         # If toggle relay 3 is in the arguments parse it.
         if self.__TOGGLE_RELAY_3 in query_dict:
-            state = query_dict[self.__TOGGLE_RELAY_3]
-            if state == "1":
-                state = not self.__io_board.get_output(2)
-                self.__io_board.set_output(2, state)
+
+            state = str(query_dict[self.__TOGGLE_RELAY_3][0])
+            self.__toggle_relay(2, state)
 
         # If toggle relay 4 is in the arguments parse it.
         if self.__TOGGLE_RELAY_4 in query_dict:
-            state = query_dict[self.__TOGGLE_RELAY_4]
-            if state == "1":
-                state = not self.__io_board.get_output(3)
-                self.__io_board.set_output(3, state)
+
+            state = str(query_dict[self.__TOGGLE_RELAY_4][0])
+            self.__toggle_relay(3, state)
 
         # If pulse relay 1 is in the arguments parse it.
         if self.__PULSE_RELAY_1 in query_dict:
+
             str_time = query_dict[self.__PULSE_RELAY_1]
-            try:
-                flt_time = float(str_time)
-                self.__io_board.timed_output_set(0, flt_time)
-            except:
-                pass
+            self.__pulse_relay(0, str_time)
 
         # If pulse relay 2 is in the arguments parse it.
         if self.__PULSE_RELAY_2 in query_dict:
+
             str_time = query_dict[self.__PULSE_RELAY_2]
-            try:
-                flt_time = float(str_time)
-                self.__io_board.timed_output_set(1, flt_time)
-            except:
-                pass
+            self.__pulse_relay(1, str_time)
 
         # If pulse relay 3 is in the arguments parse it.
         if self.__PULSE_RELAY_3 in query_dict:
+
             str_time = query_dict[self.__PULSE_RELAY_3]
-            try:
-                flt_time = float(str_time)
-                self.__io_board.timed_output_set(2, flt_time)
-            except:
-                pass
+            self.__pulse_relay(2, str_time)
 
         # If pulse relay 4 is in the arguments parse it.
         if self.__PULSE_RELAY_4 in query_dict:
+
             str_time = query_dict[self.__PULSE_RELAY_4]
-            try:
-                flt_time = float(str_time)
-                self.__io_board.timed_output_set(3, flt_time)
-            except:
-                pass
+            self.__pulse_relay(3, str_time)
 
         # Check if the relay outputs key is in the list.
         if self.__RO["key"] in query_dict:
@@ -312,7 +330,7 @@ class IOHandler(RequestHandler):
                     self.__entries.append(entry)
 
             # If the key is array.
-            elif indexes != "":
+            elif "," in indexes:
 
                 # Split by coma.
                 indexes_spited = indexes.split(",")
@@ -372,12 +390,12 @@ class IOHandler(RequestHandler):
                     self.__entries.append(entry)
 
             # If the key is array.
-            elif indexes != "":
+            elif "," in indexes:
 
                 # Split by coma.
                 indexes_split = indexes.split(",")
 
-                # Remove dublicates and sort.
+                # Remove duplicates and sort.
                 indexes_split = sorted(list(set(indexes_split)))
 
                 # If the length is grater then one.
@@ -446,7 +464,7 @@ class IOHandler(RequestHandler):
                     self.__entries.append(entry)
 
             # If the key is array.
-            elif indexes != "":
+            elif "," in indexes:
 
                 # Split by coma.
                 indexes_split = indexes.split(",")
@@ -505,7 +523,7 @@ class IOHandler(RequestHandler):
                     self.__entries.append(entry)
 
             # If the key is array.
-            elif indexes != "":
+            elif "," in indexes:
 
                 # Split by coma.
                 indexes_split = indexes.split(",")
@@ -585,7 +603,7 @@ class IOHandler(RequestHandler):
                     self.__entries.append(es_entry)
 
             # If the key is array.
-            elif indexes != "":
+            elif "," in indexes:
 
                 # Split by coma.
                 indexes_split = indexes.split(",")
