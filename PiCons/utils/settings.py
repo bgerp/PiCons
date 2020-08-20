@@ -66,9 +66,9 @@ __status__ = "Debug"
 #endregion
 
 class AppSettings:
-    """This class is dedicated to drive IO pins of the Raspberry PI 2/3/4."""
+    """Settings class organizer."""
 
-    #region Attributes
+#region Attributes
 
     __logger = None
     """Logger"""
@@ -85,9 +85,9 @@ class AppSettings:
     __enable_write_in_file = False
     """Configuration parser."""
 
-    #endregion
+#endregion
 
-    #region Properties
+#region Properties
 
     @property
     def exists(self):
@@ -166,9 +166,9 @@ class AppSettings:
 
         self.__enable_write_in_file = value
 
-    #endregion
+#endregion
 
-    #region Constructor / Destructor
+#region Constructor / Destructor
 
     def __init__(self, file_name=None):
         """Constructor
@@ -197,9 +197,9 @@ class AppSettings:
 
         self.save()
 
-    #endregion
+#endregion
 
-    #region Public Methods
+#region Public Methods
 
     def read(self):
         """Read YAML file."""
@@ -349,6 +349,8 @@ class AppSettings:
 
         key = "aidescription" + str(index)
         return self.__config["AI"][key]
+
+#endregion
 
 #region Static Methods
 
