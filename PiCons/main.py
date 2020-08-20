@@ -125,8 +125,9 @@ def main():
 
     # Run the WEB service.
     # ip_address = get_local_ip()
-    ip_address = socket.gethostbyname(socket.gethostname())
-    __server = Server(ip_address, __setting.server_port)
+    # ip_address = socket.gethostbyname(socket.gethostname())
+    # __server = Server(ip_address, __setting.server_port)
+    __server = Server("", __setting.server_port)
     __server.start()
 
     # Hold the runtime.
