@@ -28,7 +28,7 @@ SOFTWARE.
 """
 
 from urllib import parse
-# from urlparse import urlparse, parse_qs
+from xml.dom.minidom import parseString
 
 import dicttoxml
 
@@ -148,7 +148,10 @@ class IOHandler(RequestHandler):
 
         page_body = dicttoxml.dicttoxml(container, custom_root="Monitor", attr_type=False)
 
-        return page_body
+        dom = parseString(page_body)
+        page_body_bu = dom.toprettyxml()
+
+        return page_body_bu.encode("utf-8")
 
 #endregion
 

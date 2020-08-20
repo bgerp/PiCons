@@ -116,31 +116,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         return mime_type
 
-    def __send_page(self):
-
-        mime_type = self._get_mime()
-        page = self._do_page()
-
-        # Status code.
-        self.send_response(200)
-
-        # Add content type.
-        self.send_header("Content-type", mime_type)
-
-         # This may be usefull as a settings. Only the central server can call the IO device.
-        self.send_header("Access-Control-Allow-Origin", "*")
-
-         # This may be usefull only with get method to access the device.
-        #self.send_header("Access-Control-Allow-Methods", "GET")
-
-        self.send_header("Cache-Control", "no-cache")
-
-        # End headers.
-        self.end_headers()
-
-        # Send the page
-        self.wfile.write(page)
-
 #endregion
 
 #region Public Methods
@@ -164,7 +139,16 @@ class RequestHandler(BaseHTTPRequestHandler):
         if (self.headers["Authorization"] == "Basic " + key)\
              or (self.client_address[0] == "127.0.0.1"):
 
-            self.__send_page()
+            mime_type = self._get_mime("*.xml")
+            page = self._do_page()
+
+            self.send_response(200)
+            self.send_header("Content-type", mime_type)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Age", "0")
+            self.end_headers()
+            self.wfile.write(page)
 
         # Else redirect to authorize.
         elif self.headers["Authorization"] is None:
@@ -181,10 +165,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         mime_type = self._get_mime()
 
         self.send_response(401)
-        self.send_header("WWW-Authenticate", "Basic realm=\"Test\"")
+        self.send_header("WWW-Authenticate", "Basic realm=\"Authorize\"")
         self.send_header("Content-type", mime_type)
         self.send_header("Cache-Control", "no-cache")
+        self.send_header("Age", "0")
         self.end_headers()
-        self.wfile.write("".encode("utf-8"))
+        self.wfile.write("Not authorized.".encode("utf-8"))
 
 #endregion
