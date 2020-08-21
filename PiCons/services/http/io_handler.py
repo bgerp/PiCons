@@ -199,6 +199,16 @@ class IOHandler(RequestHandler):
         except:
             pass
 
+        return_state = self.__io_board.get_output(key)
+
+        identifier = self.__RO["identifier"][str(key + 1)]
+        value = self.__STATE_HIGH if return_state else self.__STATE_LOW
+        name = self._settings.ro_name(key + 1)
+
+        entry = self.__generate_entry(self.__RO["unit"], identifier, name, value)
+
+        self.__entries.append(entry)
+
     def __generate_entry(self, units, identifier, name, value):
         """Generate entry.
 
