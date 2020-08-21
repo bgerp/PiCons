@@ -321,8 +321,8 @@ class ApplicationSettings:
     def reset_counters(self, cnt1=0, cnt2=0):
         """Update counters values."""
 
-        self.__config.set("CI", "CIValue1", cnt1)
-        self.__config.set("CI", "CIValue2", cnt2)
+        self.__config["CI"]["civalue1"] = cnt1
+        self.__config["CI"]["civalue1"] = cnt2
 
         self.save()
 
