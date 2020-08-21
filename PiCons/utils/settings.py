@@ -65,7 +65,7 @@ __status__ = "Debug"
 
 #endregion
 
-class AppSettings:
+class ApplicationSettings:
     """Settings class organizer."""
 
 #region Attributes
@@ -358,9 +358,9 @@ class AppSettings:
     def get_instance(file_path=None):
         """Singelton instance."""
 
-        if AppSettings.__instance is None:
-            AppSettings.__instance = AppSettings(file_path)
+        if ApplicationSettings.__instance is None:
+            ApplicationSettings.__instance = ApplicationSettings(file_path)
 
-        return AppSettings.__instance
+        return ApplicationSettings.__instance
 
 #endregion

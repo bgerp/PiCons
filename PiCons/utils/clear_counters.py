@@ -27,7 +27,7 @@ SOFTWARE.
 
 """
 
-from settings import AppSettings
+from utils.settings import ApplicationSettings
 
 #region File Attributes
 
@@ -61,7 +61,7 @@ __status__ = "Debug"
 #endregion
 
 def main():
-    settings = AppSettings.AppSettings("../settings.ini")
+    settings = ApplicationSettings()
     settings.reset_counters(0, 0)
 
 if (__name__ == "__main__"):

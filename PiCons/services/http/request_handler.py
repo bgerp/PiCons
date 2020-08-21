@@ -30,7 +30,7 @@ SOFTWARE.
 from http.server import BaseHTTPRequestHandler
 
 from utils.logger import get_logger
-from utils.settings import AppSettings
+from utils.settings import ApplicationSettings
 
 class RequestHandler(BaseHTTPRequestHandler):
     """Request Handler"""
@@ -40,7 +40,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     _PROTOCOL_VERSION = "16.11.0.1"
     """Protocol version."""
 
-    _settings = AppSettings.get_instance()
+    _settings = ApplicationSettings.get_instance()
     """Application settingas,"""
 
     __api_path_evok = "/api/evok-webhooks"

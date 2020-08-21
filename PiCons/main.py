@@ -32,7 +32,7 @@ import socket
 import time
 
 from utils.logger import get_logger, crate_log_file
-from utils.settings import AppSettings
+from utils.settings import ApplicationSettings
 from utils.utils import get_local_ip
 
 from services.http.server import Server
@@ -109,7 +109,7 @@ def main():
     crate_log_file()
     __logger = get_logger(__name__)
 
-    __setting = AppSettings.get_instance()
+    __setting = ApplicationSettings.get_instance()
     while not __setting.exists:
         __logger.info("Settings not exists.")
         __setting.enable_write = True
