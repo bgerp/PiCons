@@ -62,9 +62,9 @@ __status__ = "Debug"
 
 def main():
     settings = ApplicationSettings()
+    settings.enable_write = True
     settings.reset_counters(0, 0)
+    settings.enable_write = False
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     main()
-
-
