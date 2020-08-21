@@ -81,7 +81,7 @@ class IOHandler(RequestHandler):
     """Pulse relay 4 command key. Value: 1 to 60[s]"""
 
     __RO = {"key":"RelayOutputs", "unit":"LogicLevel", "identifier":{"1": "0", "2": "1", "3": "2", "4": "3"}}
-    """Relay outputs descriptor."""
+    """Relay relays descriptor."""
 
     __DI = {"key":"DigitalInputs", "unit":"LogicLevel", "identifier":{"1": "4", "2": "5", "3": "6", "4": "7", "5": "8", "6": "9"}}
     """Digital inputs descriptor."""
@@ -161,11 +161,11 @@ class IOHandler(RequestHandler):
         """Turn ON/OFF the relay."""
 
         if state == self.__STATE_LOW:
-            self.__io_board.set_output(key, False)
+            self.__io_board.set_relay(key, False)
         if state == self.__STATE_HIGH:
-            self.__io_board.set_output(key, True)
+            self.__io_board.set_relay(key, True)
 
-        return_state = self.__io_board.get_output(key)
+        return_state = self.__io_board.get_relay(key)
 
         identifier = self.__RO["identifier"][str(key + 1)]
         value = self.__STATE_HIGH if return_state else self.__STATE_LOW
@@ -178,10 +178,10 @@ class IOHandler(RequestHandler):
     def __toggle_relay(self, key, state):
 
         if state == self.__STATE_HIGH:
-            state = not self.__io_board.get_output(key)
-            self.__io_board.set_output(key, state)
+            state = not self.__io_board.get_relay(key)
+            self.__io_board.set_relay(key, state)
 
-        return_state = self.__io_board.get_output(key)
+        return_state = self.__io_board.get_relay(key)
 
         identifier = self.__RO["identifier"][str(key + 1)]
         value = self.__STATE_HIGH if return_state else self.__STATE_LOW
@@ -195,11 +195,11 @@ class IOHandler(RequestHandler):
 
         try:
             flt_time = float(str_time)
-            self.__io_board.timed_output_set(key, flt_time)
+            self.__io_board.timed_relay_set(key, flt_time)
         except:
             pass
 
-        return_state = self.__io_board.get_output(key)
+        return_state = self.__io_board.get_relay(key)
 
         identifier = self.__RO["identifier"][str(key + 1)]
         value = self.__STATE_HIGH if return_state else self.__STATE_LOW
@@ -312,14 +312,14 @@ class IOHandler(RequestHandler):
             str_time = query_dict[self.__PULSE_RELAY_4]
             self.__pulse_relay(3, str_time)
 
-        # Check if the relay outputs key is in the list.
+        # Check if the relay relays key is in the list.
         if self.__RO["key"] in query_dict:
 
             indexes = query_dict[self.__RO["key"]]
 
-            relay_outputs = self.__io_board.get_outputs()
+            relay_outputs = self.__io_board.get_relays()
 
-            # If the key is all then get all relay outputs.
+            # If the key is all then get all relay relays.
             if indexes == "all":
 
                 for key, value in enumerate(self.__RO["identifier"]):

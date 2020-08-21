@@ -327,7 +327,7 @@ class ApplicationSettings:
         self.save()
 
     def ro_name(self, index):
-        """Relay outputs name."""
+        """Relay relays name."""
 
         key = "rodescription" + str(index)
         return self.__config["RO"][key]

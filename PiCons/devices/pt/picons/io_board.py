@@ -79,9 +79,9 @@ class IOBoard():
     __logger = None
     """"Logger"""
 
-    __output_pins = [18, 17, 27, 23]
+    __relays_pins = [18, 17, 27, 23]
     """
-        Output pins map. The settings are static because of the IO board.
+        Relay pins map. The settings are static because of the IO board.
         @see http://makezine.com/projects/tutorial-raspberry-pi-gpio-pins-and-python/
     """
 
@@ -93,7 +93,7 @@ class IOBoard():
 
     __output_states = [False, False, False, False]
     """
-        Output pins states.
+        Relay pins states.
         @see http://makezine.com/projects/tutorial-raspberry-pi-gpio-pins-and-python/
     """
 
@@ -107,7 +107,7 @@ class IOBoard():
     """Analog inputs map."""
 
     __output_len = 0
-    """Output pin array len."""
+    """Relay pin array len."""
 
     __input_len = 0
     """Input pin array len."""
@@ -140,8 +140,8 @@ class IOBoard():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
-        # Setup outputs.
-        for pin in self.__output_pins:
+        # Setup relays.
+        for pin in self.__relays_pins:
             GPIO.setup(pin, GPIO.OUT)
             GPIO.output(pin, False)
 
@@ -156,7 +156,7 @@ class IOBoard():
 
         self.__adc = MCP3008()
 
-        self.__output_len = len(self.__output_pins)
+        self.__output_len = len(self.__relays_pins)
         self.__input_len = len(self.__input_pins)
 
     def __del__(self):
@@ -169,18 +169,18 @@ class IOBoard():
 
     #region Public Methods
 
-    def get_output(self, index):
-        """Get the output state.
+    def get_relay(self, index):
+        """Get the relay state.
 
         Parameters
         ----------
         index : int
-            Output index.
+            Relay index.
 
         Returns
         -------
         bool
-            Output state.
+            Relay state.
         """
 
         if index > self.__output_len or index < 0:
@@ -189,15 +189,15 @@ class IOBoard():
         # Set the state.
         return self.__output_states[index]
 
-    def set_output(self, index, state):
-        """Get the output state.
+    def set_relay(self, index, state):
+        """Get the relay state.
 
         Parameters
         ----------
         index : int
-            Output index.
+            Relay index.
         state : bool
-            Output state.
+            Relay state.
 
         Returns
         -------
@@ -211,24 +211,25 @@ class IOBoard():
         # Set the state.
         self.__output_states[index] = state
 
-        # Update output data.
-        self.__update_outputs()
+        # Update relay data.
+        self.__update_relays()
 
         return True
 
-    def get_outputs(self):
-        """Get the outputs states.
+    def get_relays(self):
+        """Get the relays states.
 
         Returns
         -------
         []
-            Output states array.
+            Relay states array.
         """
 
-        # Update output data.
-        self.__update_outputs()
+        # Update relay data.
+        self.__update_relays()
 
         return self.__output_states
+
 
     def get_input(self, index):
         """Get the input state.
@@ -376,8 +377,8 @@ class IOBoard():
         return adc_values
 
 
-    def timed_output_set(self, index, pulse_time):
-        """Timed set output.
+    def timed_relay_set(self, index, pulse_time):
+        """Timed set relay.
 
         Parameters
         ----------
@@ -401,11 +402,11 @@ class IOBoard():
 
     #region Private Methods
 
-    def __update_outputs(self):
-        """Update outputs states."""
+    def __update_relays(self):
+        """Update relays states."""
 
         for index in range(0, self.__output_len):
-            GPIO.output(self.__output_pins[index], self.__output_states[index])
+            GPIO.output(self.__relays_pins[index], self.__output_states[index])
 
     def __update_inputs(self):
         """Update inputs states."""
@@ -484,7 +485,7 @@ class IOBoard():
         return result
 
     def __timed_output_set_worker(self, index, pulse_time):
-        """Thread worker method for timed outputs.
+        """Thread worker method for timed relays.
 
         Parameters
         ----------
@@ -495,12 +496,12 @@ class IOBoard():
         """
 
         # 1. Swich On the GPIO(index)
-        self.set_output(index, True)
+        self.set_relay(index, True)
 
         # 2. Wait (time)
         time.sleep(float(pulse_time))
 
         # 3. Swich Off the GPIO(index)
-        self.set_output(index, False)
+        self.set_relay(index, False)
 
     #endregion
