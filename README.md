@@ -3,10 +3,10 @@
 The idea of this application is to help WEB based application to talk with industrial hardware.
 
 This application provides simply an HTTP server that generates XML responses.
-The content of this responses is state of the digital inputs, digital outputs,
-pulsed outputs, analog inputs, electronic scales, etc.
+The content of this responses is state of the digital inputs, digital relays,
+pulsed relays, analog inputs, electronic scales, etc.
 
-Of course wia HTTP we can manipulate the outputs of the device.
+Of course wia HTTP we can manipulate the relays of the device.
 
 Pi-Cons has LCD display that can displays WEB pages.
 This is very useful becaus we can create simple and same time
@@ -15,7 +15,7 @@ beautiful user interface with dynamic forms and content.
 ## Limitations
 
  - Application is opening only port 80. To change this you should change PORT_NUMBER in main.py.
- - Application can work only with 4 fixed GPIOs as outputs, 6 fixed GPIOs as inputs,
+ - Application can work only with 4 fixed GPIOs as relays, 6 fixed GPIOs as inputs,
  8 fixed analog inputs via MCP8003. The chip is connected via SPI0.
 
 ## Compatible Hardware
