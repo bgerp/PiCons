@@ -67,7 +67,7 @@ https://opensource.org/licenses/MIT
 
         sudo bash picons_setup.sh
 
-7. the device will autmaticly reboot affter instalation.
+7. the device will automatically reboot after installation.
 
 ## To make the tests of the device. 
 
