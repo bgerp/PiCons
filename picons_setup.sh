@@ -10,9 +10,10 @@ fi
 
 apt-get -y update
 apt-get -y upgrade
-apt-get install build-essential python-dev python-smbus git php-cli rng-tools chromium-browser -y
-pip install mcp3008
-pip install dicttoxml
+// apt-get install build-essential python-dev python-smbus git php-cli rng-tools chromium-browser -y
+apt-get install build-essential php-cli rng-tools chromium-browser -y
+// pip install mcp3008
+// pip install dicttoxml
 cd /home/pi
 chmod -R +x /home/pi/PiCons
 cd /home/pi/.config/
