@@ -34,22 +34,20 @@ define ('DEVICE', '/dev/ttyS0');
 clearstatcache();
 $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
-$res = [];
-$value = "";
-$cnt = 0;
-// четем 3 пъти, търсим 2 последователни равни стринга за стабилно състояние /всеки 2-ри 3 празен стринг/
-for ($i=1; $i<=6; $i++ ) {
-	$res = trim(fgets($fp));
-	if (!empty($res)) {
-		//echo ($res . "-----" . $value . "<br>");
-		if ($value == $res) {
-			$cnt++; //echo("xxxx<br>");
-		} else {
-			$value = $res;
-			
-		}
 
-	}
+$value = $res = "";
+$cnt = 0;
+// търсим 2 последователни равни стринга или стабилно състояние /всеки 2-ри 3 празен стринг/
+while ($cnt<1) {
+    $res = trim(fgets($fp));
+    if (!empty($res)) { //echo ($res . "\n");
+        if ($value == $res || (true === strpos($res, "ST,GS"))) {
+            $cnt++;
+        } else {
+            $value = $res;
+        }
+        
+    }
 }
 fclose($fp);
 
