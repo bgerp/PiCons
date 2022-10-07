@@ -34,9 +34,8 @@ define ('DEVICE', '/dev/ttyUSB0');
 clearstatcache();
 $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
-$res = [];
-$value = "";
-$cnt = 0;
+
+$value = $res = "";
 // четем 4 пъти, търсим 2 последователни равни стринга за стабилно състояние /всеки 2-ри 3 празен стринг/
 for ($i=1; $i<=4; $i++ ) {
 	$res = trim(fgets($fp));
