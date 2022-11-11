@@ -1,4 +1,9 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] != 'GET') {
+    
+    exit;
+}
+
 #include ('vedicom600_1000.php');
 include ('standard_scale.php');
 
