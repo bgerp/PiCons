@@ -40,7 +40,7 @@ $cnt = 0;
 // търсим 2 последователни равни стринга или стабилно състояние /всеки 2-ри 3 празен стринг/
 while ($cnt<1) {
     $res = trim(fgets($fp));
-    if (!empty($res)) { //echo ($res . "\n");
+    if (!empty(trim($res))) { //echo ($res . "\n");
         if ($value == $res || (true === strpos($res, "ST,GS"))) {
             $cnt++;
         } else {

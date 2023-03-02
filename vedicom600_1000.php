@@ -39,7 +39,7 @@ $value = $res = "";
 // четем 4 пъти, търсим 2 последователни равни стринга за стабилно състояние /всеки 2-ри 3 празен стринг/
 for ($i=1; $i<=4; $i++ ) {
 	$res = trim(fgets($fp));
-	if (!empty($res)) {
+	if (!empty(trim($res))) {
 		preg_match_all("/[+-]?([0-9]*[.])?[0-9]+/", $res, $resV);
 		if ($value == $resV[0][0] && is_numeric($value)) {
 		    $value = str_replace("+", "", $value);
