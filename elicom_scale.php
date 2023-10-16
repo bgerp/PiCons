@@ -1,15 +1,11 @@
 <?php
 
+
+
 /*
- * US,GS,+ 7.14 kg
- *US,GS,+  27.26kg
- *ST,GS,+      0 g
- *US,GS,+  23550 g
- *ST,GS,+   0.00lb
- *US,GS,+  61.36lb
- *ST,GS,+    0.0oz
- *US,GS,+ 1071.0oz
- 
+ * 000050A - нестабилно 50 гр.
+ * 000150B - стабилно 150 гр.
+ *
 **/
 
 $tmpl = "<?xml version='1.0' encoding='UTF-8' ?>" . 
@@ -36,21 +32,29 @@ clearstatcache();
 $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
 
-$value = $res = "";
+$res = "";
 $cnt = 0;
 $ch = '';
+$stable = false;
 
-// търсим 2 последователни равни стринга или стабилно състояние /всеки 2-ри 3 празен стринг/
-while ($ch!='B') {
+// Търсим първият стринг с дължина 6 и завършващ на 'B'
+while ($stable != true) {
     $ch = fgetc($fp);
-    if (!empty($ch)) { echo ($ch . "\n");
-        $res .= $ch;
+    if ($ch != 'B') {;
+        $res .= $ch; $cnt++;
+    } elseif ($cnt == 6) {
+        $stable = true;
     }
 }
 fclose($fp);
+
 echo ($res);
 
+$weight = substr($res,0,3) . "." . substr($res,3,6);
+$weight = substr($res,0,3) . "." . substr($res,3,6);
+$weight =  number_format($weight, 3, '.', '');
 
+$err = true;
 
 if (!$err) {
 	$tmpl = str_replace('[#0.000#]', $weight, $tmpl);
