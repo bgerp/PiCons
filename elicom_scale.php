@@ -52,7 +52,7 @@ $weight = substr($res,0,3) . "." . substr($res,3,6);
 $weight = substr($res,0,3) . "." . substr($res,3,6);
 $weight =  number_format($weight, 3, '.', '');
 
-$err = true;
+$err = false;
 
 if (!$err) {
 	$tmpl = str_replace('[#0.000#]', $weight, $tmpl);
