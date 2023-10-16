@@ -48,8 +48,6 @@ while ($stable != true) {
 }
 fclose($fp);
 
-echo ($res);
-
 $weight = substr($res,0,3) . "." . substr($res,3,6);
 $weight = substr($res,0,3) . "." . substr($res,3,6);
 $weight =  number_format($weight, 3, '.', '');
