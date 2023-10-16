@@ -38,34 +38,20 @@ $fp = fopen(DEVICE,'r');
 
 $value = $res = "";
 $cnt = 0;
+$ch = '';
+
 // търсим 2 последователни равни стринга или стабилно състояние /всеки 2-ри 3 празен стринг/
-while ($cnt<1) {
-    $res = trim(fgets($fp,7));
-    if (!empty(trim($res))) { //echo ($res . "\n");
-        if ($value == $res || (true === strpos($res, "B"))) {
-            $cnt++;
-        } else {
-            $value = $res;
-        }
-        
+while ($ch!='B') {
+    $ch = fgetc($fp);
+    if (!empty($ch)) { echo ($ch . "\n");
+        $res .= $ch;
     }
 }
 fclose($fp);
+echo ($res);
 
-$valueArr = explode (' ', $value);
-$err = true;
-$weight = 0;
 
-foreach ($valueArr as $value) {
 
-	$value = str_replace('kg', '', $value, $cnt);
-	if (is_numeric($value)) {
-		$weight = $value; //echo($weight); die;
-	}
-	if ($cnt > 0) {
-		$err = false;
-	}
-}
 if (!$err) {
 	$tmpl = str_replace('[#0.000#]', $weight, $tmpl);
 } else {
