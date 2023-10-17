@@ -1,7 +1,9 @@
 <?php
 
-
-
+// За Windows
+if (substr(php_uname(), 0, 7) === "Windows") {
+    exec("mode COM1 96,n,8");
+}
 /*
  * 000050A - нестабилно 50 гр.
  * 000150B - стабилно 150 гр.
@@ -33,23 +35,18 @@ $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
 
 $res = "";
-$cnt = 0;
-$ch = '';
 $stable = false;
 
 // Търсим първият стринг с дължина 6 и завършващ на 'B'
 while ($stable != true) {
-    $ch = fgetc($fp);
-    if ($ch != 'B') {;
-        $res .= $ch; $cnt++;
-    } elseif ($cnt == 6) {
+    $res = fgetc($fp);
+    if (strlen($res)>6 && (false !== strpos($res, "B"))) {
         $stable = true;
     }
 }
 fclose($fp);
 
-$weight = substr($res,0,3) . "." . substr($res,3,6);
-$weight = substr($res,0,3) . "." . substr($res,3,6);
+$weight = substr($res,strlen($res)-7,3) . "." . substr($res,$res,strlen($res)-4,3);
 $weight =  number_format($weight, 3, '.', '');
 
 $err = false;
