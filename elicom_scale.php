@@ -1,16 +1,15 @@
 <?php
 
-
-
+// set port params
+//exec('powershell C:\Users\1064\PiCons\comport_elicom.ps1');
 /*
  * 000050A - нестабилно 50 гр.
  * 000150B - стабилно 150 гр.
  *
 **/
-
 $tmpl = "<?xml version='1.0' encoding='UTF-8' ?>" . 
-	"<monitor>" . 
-	"<Devices>" .
+	"<monitor>" .
+		"<Devices>" .
 	"<item>" . 
 	"<Name>D19</Name>" .
 	"<Entries>" .
@@ -31,25 +30,19 @@ define ('DEVICE', 'COM1');
 clearstatcache();
 $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
-
+//stream_set_timeout($fp, 2);
 $res = "";
-$cnt = 0;
-$ch = '';
 $stable = false;
 
 // Търсим първият стринг с дължина 6 и завършващ на 'B'
 while ($stable != true) {
-    $ch = fgetc($fp);
-    if ($ch != 'B') {;
-        $res .= $ch; $cnt++;
-    } elseif ($cnt == 6) {
-        $stable = true;
+    $res .= fgetc($fp);
+    if (strlen($res)>6 && (false !== strpos($res, "B"))) {
+		$stable = true;
     }
 }
 fclose($fp);
-
-$weight = substr($res,0,3) . "." . substr($res,3,6);
-$weight = substr($res,0,3) . "." . substr($res,3,6);
+$weight = substr($res,strlen($res)-7,3) . "." . substr($res,strlen($res)-4,3);
 $weight =  number_format($weight, 3, '.', '');
 
 $err = false;
@@ -59,4 +52,4 @@ if (!$err) {
 } else {
 	$tmpl = str_replace('[#0.000#]', 'PORT_BUSSY', $tmpl);
 }
-
+//echo $tmpl;
