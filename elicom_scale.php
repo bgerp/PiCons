@@ -1,7 +1,9 @@
 <?php
 
-// set port params
-//exec('powershell C:\Users\1064\PiCons\comport_elicom.ps1');
+// За Windows
+if (substr(php_uname(), 0, 7) === "Windows") {
+    exec("mode COM1 96,n,8");
+}
 /*
  * 000050A - нестабилно 50 гр.
  * 000150B - стабилно 150 гр.
