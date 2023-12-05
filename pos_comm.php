@@ -1,6 +1,14 @@
 <?php
 // exec ('powershell C:\Users\epuser\Documents\GitHub\PiCons\pos_comport.ps1');
 
+/**
+ * Изпраща команда към ПОС терминала
+ *
+ * @param resource $fp файлов манипулатор за ПОС-а
+ * @param array $cmd команда
+ *
+ * @return bool
+ */
 function cmdWrite ($fp, $cmd)
 {
 	foreach ($cmd as $b) {
@@ -13,6 +21,13 @@ function cmdWrite ($fp, $cmd)
 	return true;
 }
 
+/**
+ * Чете резултат от терминала
+ *
+ * @param resource $fp файлов манипулатор за ПОС-а
+ *
+ * @return array $res 
+ */
 function cmdRead($fp)
 {
 	$end = false;
@@ -30,6 +45,13 @@ function cmdRead($fp)
 	return $res;
 }
 
+/**
+ * Изчислява сума по четност
+ *
+ * @param array $res команда
+ *
+ * @return string $res
+ */
 function parityCheck(array $arr) 
 {
 	// Махаме първия байт 06 - ACK - Acknowledge
