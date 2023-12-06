@@ -77,12 +77,16 @@ $STX = [0x02]; // STX - Start of Text
 $ETX = [0x03]; // ETX - End of Text
 $АСК = [0x06]; // ACK - Acknowledge
 
-// Request approval
-$rApproval = array(0x02, 0x31, 0x30, 0x31, 0x03, 0x33);
-if (!cmdWrite($fp,$rApproval)) die('Write error!');
+//// Request approval
+$rApproval =  [0x02, 0x31, 0x30, 0x31, 0x03, 0x33];
+$okApproval = [0x06, 0x02, 0x51, 0x48, 0x49, 0x03];
+if (!cmdWrite($fp,$rApproval)) {
+	fclose($fp);
+	die("err:  Грешка при изпращане!");
+}
 $res = cmdRead($fp);
-var_dump($res);
 
+//die;
 //------------ Пращаме сума 12 байта
 $amount = '423.78';
 $amount = intval((100*floatval($amount)));
@@ -94,10 +98,29 @@ $amountArr = unpack('C*', $amount);
 $amountCmd = array_merge([0x06,0x02,0x34,0x30,0x31,0x31], $amountArr, [0x39,0x37,0x35], [0x39,0x39,0x39,0x39], $ETX);
 $amountCmd = array_merge($amountCmd, parityCheck($amountCmd));
 
-if (!cmdWrite($fp,$amountCmd)) die('Write error!');
+if (!cmdWrite($fp,$amountCmd)) {
+	fclose($fp);
+	die("err: Грешка при изпращане!");
+}
 
 $res = cmdRead($fp);
 
-var_dump($res);
-
 fclose($fp);
+
+if (count($res) == 60) {
+	die("OK");
+}
+
+echo ("err: Неопределена грешка.")
+
+// При отказ:           array(8) {[0]=>  int(6)  [1]=>  int(2)  [2]=>  int(50)  [3]=>  int(48)  [4]=>  int(49)  [5]=>  int(49)  [6]=>  int(55)  [7]=>  int(3)}
+// При грешен ПИН:      array(8) {[0]=>  int(6)  [1]=>  int(2)  [2]=>  int(50)  [3]=>  int(48)  [4]=>  int(49)  [5]=>  int(48)  [6]=>  int(56)  [7]=>  int(3)}
+
+// При валидно плащане: array(60){[0]=>  int(6)  [1]=>  int(2)  [2]=>  int(53)  [3]=>  int(48)  [4]=>  int(49)  [5]=>  int(49)  [6]=>  int(80)  [7]=>  int(53) 
+//								  [8]=>  int(52) [9]=>  int(48) [10]=> int(48)  [11]=> int(52)  [12]=> int(49)  [13]=> int(51)  [14]=> int(48)  [15]=> int(48)
+//								  [16]=> int(48) [17]=> int(48) [18]=> int(49)  [19]=> int(50)  [20]=> int(51)  [21]=> int(48)  [22]=> int(52)  [23]=> int(48)
+//								  [24]=> int(56) [25]=> int(54) [26]=> int(48)  [27]=> int(48)  [28]=> int(48)  [29]=> int(51)  [30]=> int(51)  [31]=> int(51)
+//								  [32]=> int(57) [33]=> int(48) [34]=> int(49)  [35]=> int(54)  [36]=> int(51)  [37]=> int(54)  [38]=> int(54)  [39]=> int(57)
+//								  [40]=> int(56) [41]=> int(48) [42]=> int(48)  [43]=> int(48)  [44]=> int(48)  [45]=> int(48)  [46]=> int(48)  [47]=> int(48)
+//								  [48]=> int(52) [49]=> int(50) [50]=> int(51)  [51]=> int(55)  [52]=> int(56)  [53]=> int(48)  [54]=> int(52)  [55]=> int(51)
+//								  [56]=> int(52) [57]=> int(53) [58]=> int(48)  [59]=>  int(3)}
