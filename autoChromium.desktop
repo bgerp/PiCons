@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=/usr/bin/chromium-browser --noerrdialogs --disable-session-crashed-bubble --disable-infobars --kiosk http://localhost:8181
+Exec=/usr/bin/chromium-browser --noerrdialogs --kiosk https://bags.bg/core_Users/login
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name[en_US]=AutoChromium
