@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=/usr/bin/chromium-browser --noerrdialogs --kiosk https://bags.bg/core_Users/login
+Exec=/usr/bin/chromium-browser https://bags.bg/core_Users/login --kiosk --start-maximized
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name[en_US]=AutoChromium
