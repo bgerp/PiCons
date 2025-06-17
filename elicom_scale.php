@@ -11,24 +11,16 @@ if (substr(php_uname(), 0, 7) === "Windows") {
 **/
 $tmpl = "<?xml version='1.0' encoding='UTF-8' ?>" . 
 	"<monitor>" .
-		"<Devices>" .
-	"<item>" . 
-	"<Name>D19</Name>" .
-	"<Entries>" .
-	"<item>" . 
-		"<Unit>KG</Unit>" .
-		"<ID>20</ID>" .
-		"<Value>[#0.000#]</Value>" . // UNSTABLE, NO_CONNECTION, PORT_BUSSY
-		"<Name>ElectronicScale1</Name>" .
-		"</item>" .
-	"</Entries>" .
-	"</item>" .
-        "</Devices>" .	
+    	"<item>" . 
+    		"<Unit>KG</Unit>" .
+    		"<Value>[#0.000#]</Value>" . // UNSTABLE, NO_CONNECTION, PORT_BUSSY
+            "<Name>ElicomScale1</Name>" .
+         "</item>" .
 	"</monitor>";
 
 //define ('DEVICE', '/dev/ttyUSB0');
-//define ('DEVICE', '/dev/ttyS0');
-define ('DEVICE', 'COM1');
+define ('DEVICE', '/dev/ttyS0');
+//define ('DEVICE', 'COM1');
 clearstatcache();
 $fp = fopen(DEVICE,'r');
 //stream_set_blocking($fp, 0);
@@ -36,8 +28,10 @@ $fp = fopen(DEVICE,'r');
 $res = "";
 $stable = false;
 
+$startTime = time();
+
 // Търсим първият стринг с дължина 6 и завършващ на 'B'
-while ($stable != true) {
+while ((time() - $startTime) < 3 && !$stable) {
     $res .= fgetc($fp);
     if (strlen($res)>6 && (false !== strpos($res, "B"))) {
 		$stable = true;
@@ -54,4 +48,4 @@ if (!$err) {
 } else {
 	$tmpl = str_replace('[#0.000#]', 'PORT_BUSSY', $tmpl);
 }
-//echo $tmpl;
+echo $tmpl;
